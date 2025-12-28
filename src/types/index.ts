@@ -6,7 +6,8 @@
  */
 
 // Domain types
-export * from "./storeconfig";
+export * from "./storeconfig.js";
+export * from "./products.js";
 
 // =============================================================================
 // SDK Configuration

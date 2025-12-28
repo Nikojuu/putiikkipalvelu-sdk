@@ -1,6 +1,10 @@
 import type { StorefrontClientConfig } from "./types/index.js";
 import { createFetcher } from "./utils/fetch.js";
 import { createStoreResource, type StoreResource } from "./resources/store.js";
+import {
+  createProductsResource,
+  type ProductsResource,
+} from "./resources/products.js";
 
 /**
  * The Storefront API client
@@ -20,6 +24,11 @@ export interface StorefrontClient {
    * Store configuration resource
    */
   readonly store: StoreResource;
+
+  /**
+   * Products resource
+   */
+  readonly products: ProductsResource;
 }
 
 /**
@@ -53,5 +62,6 @@ export function createStorefrontClient(config: StorefrontClientConfig): Storefro
     apiKey: maskedApiKey,
     baseUrl,
     store: createStoreResource(fetcher),
+    products: createProductsResource(fetcher),
   };
 }

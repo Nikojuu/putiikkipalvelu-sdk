@@ -23,6 +23,14 @@ export type {
   FeatureFlags,
   // Products
   Product,
+  ProductDetail,
+  ProductVariation,
+  ProductVariationListing,
+  VariationOption,
+  ProductListResponse,
+  ProductCountResponse,
+  ProductListParams,
+  ProductSortOption,
   // Campaigns
   Campaign,
   CampaignType,

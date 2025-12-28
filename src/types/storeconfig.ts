@@ -203,4 +203,6 @@ export interface CategoryReference {
   name: string;
   /** URL-friendly slug */
   slug: string;
+  /** Parent category ID (null if root category) */
+  parentId: string | null;
 }

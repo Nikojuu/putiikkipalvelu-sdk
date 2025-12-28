@@ -4,7 +4,7 @@ import { AuthError, RateLimitError, NotFoundError, StorefrontError } from "../..
 
 // Mock global fetch
 const mockFetch = vi.fn();
-global.fetch = mockFetch;
+vi.stubGlobal("fetch", mockFetch);
 
 // Helper to create mock response
 function createMockResponse(options: {
