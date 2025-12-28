@@ -12,8 +12,11 @@ export class StorefrontError extends Error {
     this.code = code;
 
     // Maintains proper stack trace in V8 environments
-    if (Error.captureStackTrace) {
-      Error.captureStackTrace(this, StorefrontError);
+    const ErrorWithCapture = Error as typeof Error & {
+      captureStackTrace?: (target: object, constructor: Function) => void;
+    };
+    if (ErrorWithCapture.captureStackTrace) {
+      ErrorWithCapture.captureStackTrace(this, StorefrontError);
     }
   }
 }
