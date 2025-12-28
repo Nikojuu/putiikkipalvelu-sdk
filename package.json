@@ -50,6 +50,10 @@
   ],
   "homepage": "https://www.putiikkipalvelu.fi/fi/docs",
   "bugs": {
-    "url": "https://github.com/Nikojuu/verkkokauppapalvelu/issues"
+    "url": "https://github.com/Nikojuu/putiikkipalvelu-sdk/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Nikojuu/putiikkipalvelu-sdk"
   }
 }
