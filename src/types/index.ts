@@ -8,6 +8,7 @@
 // Domain types
 export * from "./storeconfig.js";
 export * from "./products.js";
+export * from "./categories.js";
 
 // =============================================================================
 // SDK Configuration

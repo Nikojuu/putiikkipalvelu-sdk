@@ -38,7 +38,10 @@ export type {
   BuyXPayYCampaign,
   // Shipping
   ShipmentMethod,
-  // Categories
+  // Categories (full types)
+  Category,
+  CategoryResponse,
+  // Categories (reference)
   CategoryReference,
 } from "./types/index.js";
 

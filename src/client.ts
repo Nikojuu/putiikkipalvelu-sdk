@@ -5,6 +5,10 @@ import {
   createProductsResource,
   type ProductsResource,
 } from "./resources/products.js";
+import {
+  createCategoriesResource,
+  type CategoriesResource,
+} from "./resources/categories.js";
 
 /**
  * The Storefront API client
@@ -29,6 +33,11 @@ export interface StorefrontClient {
    * Products resource
    */
   readonly products: ProductsResource;
+
+  /**
+   * Categories resource
+   */
+  readonly categories: CategoriesResource;
 }
 
 /**
@@ -63,5 +72,6 @@ export function createStorefrontClient(config: StorefrontClientConfig): Storefro
     baseUrl,
     store: createStoreResource(fetcher),
     products: createProductsResource(fetcher),
+    categories: createCategoriesResource(fetcher),
   };
 }
