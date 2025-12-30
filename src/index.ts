@@ -43,6 +43,15 @@ export type {
   CategoryResponse,
   // Categories (reference)
   CategoryReference,
+  // Cart
+  CartItem,
+  CartResponse,
+  CartValidationResponse,
+  CartValidationChanges,
+  CartSessionOptions,
+  AddToCartParams,
+  UpdateCartQuantityParams,
+  RemoveFromCartParams,
 } from "./types/index.js";
 
 // Error classes

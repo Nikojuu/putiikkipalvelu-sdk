@@ -9,6 +9,7 @@ import {
   createCategoriesResource,
   type CategoriesResource,
 } from "./resources/categories.js";
+import { createCartResource, type CartResource } from "./resources/cart.js";
 
 /**
  * The Storefront API client
@@ -38,6 +39,11 @@ export interface StorefrontClient {
    * Categories resource
    */
   readonly categories: CategoriesResource;
+
+  /**
+   * Cart resource
+   */
+  readonly cart: CartResource;
 }
 
 /**
@@ -73,5 +79,6 @@ export function createStorefrontClient(config: StorefrontClientConfig): Storefro
     store: createStoreResource(fetcher),
     products: createProductsResource(fetcher),
     categories: createCategoriesResource(fetcher),
+    cart: createCartResource(fetcher),
   };
 }
