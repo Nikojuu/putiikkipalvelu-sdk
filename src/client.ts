@@ -22,6 +22,10 @@ import {
   createOrderResource,
   type OrderResource,
 } from "./resources/order.js";
+import {
+  createCheckoutResource,
+  type CheckoutResource,
+} from "./resources/checkout.js";
 
 /**
  * The Storefront API client
@@ -71,6 +75,11 @@ export interface StorefrontClient {
    * Order resource for fetching order details
    */
   readonly order: OrderResource;
+
+  /**
+   * Checkout resource for payment processing
+   */
+  readonly checkout: CheckoutResource;
 }
 
 /**
@@ -110,5 +119,6 @@ export function createStorefrontClient(config: StorefrontClientConfig): Storefro
     shipping: createShippingResource(fetcher),
     customer: createCustomerResource(fetcher),
     order: createOrderResource(fetcher),
+    checkout: createCheckoutResource(fetcher),
   };
 }

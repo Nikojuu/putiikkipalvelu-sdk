@@ -103,7 +103,20 @@ export type {
   ConfirmationOrderShipmentMethod,
   ConfirmationOrderStatus,
   ConfirmationItemType,
+  // Checkout
+  CheckoutCustomerData,
+  CheckoutShipmentMethod,
+  CheckoutParams,
+  StripeCheckoutResponse,
+  PaytrailCheckoutResponse,
+  PaytrailProvider,
+  PaytrailGroup,
+  CheckoutErrorCode,
+  CheckoutErrorDetails,
 } from "./types/index.js";
+
+// Checkout options (re-exported from resource for convenience)
+export type { CheckoutOptions } from "./resources/checkout.js";
 
 // Pricing utilities
 export { isSaleActive, getPriceInfo } from "./utils/pricing.js";
