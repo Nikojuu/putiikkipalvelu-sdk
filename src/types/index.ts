@@ -12,6 +12,7 @@ export * from "./categories.js";
 export * from "./cart.js";
 export * from "./shipping.js";
 export * from "./customer.js";
+export * from "./order.js";
 
 // =============================================================================
 // SDK Configuration

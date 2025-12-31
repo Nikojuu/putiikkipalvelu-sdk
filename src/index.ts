@@ -96,6 +96,13 @@ export type {
   WishlistResponse,
   AddToWishlistResponse,
   RemoveFromWishlistResponse,
+  // Order (for confirmation/detail pages)
+  Order,
+  ConfirmationOrderLineItem,
+  ConfirmationOrderCustomerData,
+  ConfirmationOrderShipmentMethod,
+  ConfirmationOrderStatus,
+  ConfirmationItemType,
 } from "./types/index.js";
 
 // Pricing utilities
