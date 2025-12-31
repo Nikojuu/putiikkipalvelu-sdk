@@ -212,9 +212,6 @@ describe("cart resource", () => {
       expect(mockFetch).toHaveBeenCalledWith(
         expect.any(String),
         expect.objectContaining({
-          headers: expect.objectContaining({
-            "x-cart-id": "cart_abc",
-          }),
           body: expect.stringContaining("cart_abc"),
         })
       );

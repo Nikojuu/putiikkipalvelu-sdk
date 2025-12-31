@@ -10,6 +10,14 @@ import {
   type CategoriesResource,
 } from "./resources/categories.js";
 import { createCartResource, type CartResource } from "./resources/cart.js";
+import {
+  createShippingResource,
+  type ShippingResource,
+} from "./resources/shipping.js";
+import {
+  createCustomerResource,
+  type CustomerResource,
+} from "./resources/customer.js";
 
 /**
  * The Storefront API client
@@ -44,6 +52,16 @@ export interface StorefrontClient {
    * Cart resource
    */
   readonly cart: CartResource;
+
+  /**
+   * Shipping resource
+   */
+  readonly shipping: ShippingResource;
+
+  /**
+   * Customer authentication and account management resource
+   */
+  readonly customer: CustomerResource;
 }
 
 /**
@@ -80,5 +98,7 @@ export function createStorefrontClient(config: StorefrontClientConfig): Storefro
     products: createProductsResource(fetcher),
     categories: createCategoriesResource(fetcher),
     cart: createCartResource(fetcher),
+    shipping: createShippingResource(fetcher),
+    customer: createCustomerResource(fetcher),
   };
 }

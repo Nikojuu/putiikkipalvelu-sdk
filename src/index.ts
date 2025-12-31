@@ -38,6 +38,12 @@ export type {
   BuyXPayYCampaign,
   // Shipping
   ShipmentMethod,
+  ShipitShippingMethod,
+  // Pickup locations (from shipping.ts)
+  PickupLocation,
+  PickupLocationOpeningHours,
+  ShipmentMethodsResponse,
+  ShipmentMethodsWithLocationsResponse,
   // Categories (full types)
   Category,
   CategoryResponse,
@@ -57,6 +63,39 @@ export type {
   CalculatedCartItem,
   FreeShippingStatus,
   CartCalculationResult,
+  // Customer
+  Customer,
+  CustomerWithVerification,
+  CustomerWithEmailStatus,
+  CustomerWithCreatedAt,
+  RegisterData,
+  LoginOptions,
+  RegisterResponse,
+  LoginResponse,
+  LoginVerificationRequiredResponse,
+  LogoutResponse,
+  GetUserResponse,
+  VerifyEmailResponse,
+  ResendVerificationResponse,
+  // Customer Profile Management
+  UpdateProfileData,
+  UpdateProfileResponse,
+  DeleteAccountResponse,
+  // Customer Orders
+  OrderProductInfo,
+  OrderLineItem,
+  OrderShipmentMethod,
+  OrderStatus,
+  CustomerOrder,
+  GetOrdersResponse,
+  // Customer Wishlist
+  WishlistVariationOption,
+  WishlistVariation,
+  WishlistProduct,
+  WishlistItem,
+  WishlistResponse,
+  AddToWishlistResponse,
+  RemoveFromWishlistResponse,
 } from "./types/index.js";
 
 // Pricing utilities

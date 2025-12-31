@@ -172,13 +172,64 @@ export interface BuyXPayYCampaign {
 // =============================================================================
 
 /**
+ * Shipit shipping method details
+ * Represents a shipping service synced from the Shipit API
+ */
+export interface ShipitShippingMethod {
+  /** Unique ID */
+  id: string;
+  /** Shipit service identifier */
+  serviceId: string;
+  /** Service name */
+  name: string;
+  /** Carrier name (e.g., "Posti", "Matkahuolto") */
+  carrier: string;
+  /** Carrier logo URL */
+  logo: string;
+  /** Whether pickup is included */
+  pickUpIncluded: boolean;
+  /** Whether home delivery is available */
+  homeDelivery: boolean;
+  /** Whether worldwide delivery is available */
+  worldwideDelivery: boolean;
+  /** Whether fragile handling is available */
+  fragile: boolean;
+  /** Whether domestic deliveries are available */
+  domesticDeliveries: boolean;
+  /** Additional information */
+  information: string | null;
+  /** Service description */
+  description: string;
+  /** Package height in cm */
+  height: number;
+  /** Package length in cm */
+  length: number;
+  /** Package width in cm */
+  width: number;
+  /** Package weight in kg */
+  weight: number;
+  /** Service type */
+  type: string;
+  /** Shipit price in cents */
+  price: number;
+  /** Whether pickup point selection is available */
+  pickupPoint: boolean;
+  /** Whether only parcel locker delivery is available */
+  onlyParchelLocker: boolean;
+  /** Reference to parent shipment method */
+  shipmentMethodId: string;
+  /** Created timestamp */
+  createdAt: string;
+  /** Updated timestamp */
+  updatedAt: string;
+}
+
+/**
  * Shipping method
  */
 export interface ShipmentMethod {
   /** Unique identifier */
   id: string;
-  /** Store ID */
-  storeId: string;
   /** Shipping method name (e.g., "Posti - Paketti") */
   name: string;
   /** Description */
@@ -191,6 +242,8 @@ export interface ShipmentMethod {
   min_estimate_delivery_days: number | null;
   /** Maximum estimated delivery days */
   max_estimate_delivery_days: number | null;
+  /** Associated Shipit method (if using Shipit integration) */
+  shipitMethod?: ShipitShippingMethod | null;
 }
 
 /**

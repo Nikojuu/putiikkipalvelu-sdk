@@ -10,6 +10,8 @@ export * from "./storeconfig.js";
 export * from "./products.js";
 export * from "./categories.js";
 export * from "./cart.js";
+export * from "./shipping.js";
+export * from "./customer.js";
 
 // =============================================================================
 // SDK Configuration
