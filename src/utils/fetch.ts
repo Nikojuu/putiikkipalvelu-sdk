@@ -1,5 +1,12 @@
 import type { FetchOptions } from "../types/index.js";
-import { StorefrontError, AuthError, RateLimitError, NotFoundError, ValidationError } from "./errors.js";
+import {
+  StorefrontError,
+  AuthError,
+  RateLimitError,
+  NotFoundError,
+  ValidationError,
+  VerificationRequiredError,
+} from "./errors.js";
 
 // SDK version - will be replaced during build or read from package.json
 const SDK_VERSION = "0.1.0";
@@ -111,22 +118,35 @@ export function createFetcher(config: FetcherConfig) {
 }
 
 /**
+ * Error response JSON structure
+ */
+interface ErrorResponseJson {
+  error?: string;
+  requiresVerification?: boolean;
+  customerId?: string;
+}
+
+/**
  * Handle non-2xx responses and throw appropriate errors
  */
 async function handleErrorResponse(response: Response): Promise<never> {
-  let errorMessage: string | null = null;
+  let errorData: ErrorResponseJson = {};
 
   try {
     const json: unknown = await response.json();
-    // Extract error message if present
-    if (json && typeof json === "object" && "error" in json) {
-      errorMessage = (json as { error: string }).error;
+    if (json && typeof json === "object") {
+      errorData = json as ErrorResponseJson;
     }
   } catch {
     // Response body is not JSON
   }
 
-  const message = errorMessage || response.statusText || "Request failed";
+  const message = errorData.error || response.statusText || "Request failed";
+
+  // Check for verification required error (can be 400 or 403)
+  if (errorData.requiresVerification && errorData.customerId) {
+    throw new VerificationRequiredError(message, errorData.customerId);
+  }
 
   switch (response.status) {
     case 401:

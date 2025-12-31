@@ -32,11 +32,6 @@ import {
  */
 export interface StorefrontClient {
   /**
-   * The configured API key (masked for security)
-   */
-  readonly apiKey: string;
-
-  /**
    * The base URL for API requests
    */
   readonly baseUrl: string;
@@ -96,12 +91,6 @@ export function createStorefrontClient(config: StorefrontClientConfig): Storefro
   // Ensure baseUrl doesn't have trailing slash
   const baseUrl = config.baseUrl.replace(/\/$/, "");
 
-  // Mask API key for security (show first 8 chars only)
-  const maskedApiKey =
-    config.apiKey.length > 8
-      ? `${config.apiKey.slice(0, 8)}...`
-      : config.apiKey;
-
   // Create the fetcher for making authenticated requests
   const fetcher = createFetcher({
     apiKey: config.apiKey,
@@ -110,7 +99,6 @@ export function createStorefrontClient(config: StorefrontClientConfig): Storefro
   });
 
   return {
-    apiKey: maskedApiKey,
     baseUrl,
     store: createStoreResource(fetcher),
     products: createProductsResource(fetcher),

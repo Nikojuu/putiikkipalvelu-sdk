@@ -131,4 +131,5 @@ export {
   RateLimitError,
   NotFoundError,
   ValidationError,
+  VerificationRequiredError,
 } from "./utils/errors.js";

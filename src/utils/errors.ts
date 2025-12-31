@@ -63,3 +63,18 @@ export class ValidationError extends StorefrontError {
     this.name = "ValidationError";
   }
 }
+
+/**
+ * Error thrown when login fails due to unverified email
+ * Contains customerId for resending verification email
+ */
+export class VerificationRequiredError extends StorefrontError {
+  public readonly requiresVerification: true = true;
+  public readonly customerId: string;
+
+  constructor(message: string, customerId: string) {
+    super(message, 403, "VERIFICATION_REQUIRED");
+    this.name = "VerificationRequiredError";
+    this.customerId = customerId;
+  }
+}
