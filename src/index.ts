@@ -52,7 +52,18 @@ export type {
   AddToCartParams,
   UpdateCartQuantityParams,
   RemoveFromCartParams,
+  // Pricing & Calculation Types
+  PriceInfo,
+  CalculatedCartItem,
+  FreeShippingStatus,
+  CartCalculationResult,
 } from "./types/index.js";
+
+// Pricing utilities
+export { isSaleActive, getPriceInfo } from "./utils/pricing.js";
+
+// Cart calculation utilities
+export { calculateCartWithCampaigns } from "./utils/cart-calculations.js";
 
 // Error classes
 export {

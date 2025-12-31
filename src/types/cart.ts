@@ -107,3 +107,71 @@ export interface RemoveFromCartParams extends CartSessionOptions {
   /** Variation ID (if applicable) */
   variationId?: string;
 }
+
+// =============================================================================
+// Pricing Types
+// =============================================================================
+
+/**
+ * Price information for a product or variation
+ */
+export interface PriceInfo {
+  /** Current effective price in cents (sale price if on sale, otherwise regular) */
+  effectivePrice: number;
+  /** Original/regular price in cents */
+  originalPrice: number;
+  /** Whether the item is currently on sale */
+  isOnSale: boolean;
+  /** Sale percentage (e.g., "-20%") if applicable */
+  salePercent: string | null;
+}
+
+// =============================================================================
+// Cart Calculation Types
+// =============================================================================
+
+/**
+ * A cart item with calculated paid and free quantities (for Buy X Pay Y campaigns)
+ */
+export interface CalculatedCartItem {
+  /** Original cart item */
+  item: CartItem;
+  /** Number of units the customer pays for */
+  paidQuantity: number;
+  /** Number of units that are free (from campaign) */
+  freeQuantity: number;
+  /** Total quantity in cart */
+  totalQuantity: number;
+}
+
+/**
+ * Free shipping eligibility status
+ */
+export interface FreeShippingStatus {
+  /** Whether the cart qualifies for free shipping */
+  isEligible: boolean;
+  /** Minimum spend required for free shipping (in cents) */
+  minimumSpend: number;
+  /** Amount remaining to qualify for free shipping (in cents) */
+  remainingAmount: number;
+  /** Name of the free shipping campaign */
+  campaignName?: string;
+  /** IDs of shipment methods eligible for free shipping (when isEligible is true) */
+  eligibleShipmentMethodIds?: string[];
+}
+
+/**
+ * Result of cart calculation with campaigns applied
+ */
+export interface CartCalculationResult {
+  /** Cart items with paid/free quantities calculated */
+  calculatedItems: CalculatedCartItem[];
+  /** Final cart total after discounts (in cents) */
+  cartTotal: number;
+  /** Original cart total before discounts (in cents) */
+  originalTotal: number;
+  /** Total savings from campaigns (in cents) */
+  totalSavings: number;
+  /** Free shipping eligibility status */
+  freeShipping: FreeShippingStatus;
+}

@@ -101,7 +101,7 @@ export function createCartResource(fetcher: Fetcher) {
       const { cartId, sessionId, ...body } = params;
       return fetcher.request<CartResponse>("/api/storefront/v1/cart", {
         method: "POST",
-        headers: buildCartHeaders({ cartId, sessionId }),
+        headers: buildCartHeaders({ sessionId }),
         body: {
           cartId,
           ...body,
@@ -146,7 +146,7 @@ export function createCartResource(fetcher: Fetcher) {
       const { cartId, sessionId, ...body } = params;
       return fetcher.request<CartResponse>("/api/storefront/v1/cart", {
         method: "PATCH",
-        headers: buildCartHeaders({ cartId, sessionId }),
+        headers: buildCartHeaders({ sessionId }),
         body: {
           cartId,
           ...body,
@@ -186,7 +186,7 @@ export function createCartResource(fetcher: Fetcher) {
       const { cartId, sessionId, ...body } = params;
       return fetcher.request<CartResponse>("/api/storefront/v1/cart", {
         method: "DELETE",
-        headers: buildCartHeaders({ cartId, sessionId }),
+        headers: buildCartHeaders({ sessionId }),
         body: {
           cartId,
           ...body,
