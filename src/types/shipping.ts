@@ -30,42 +30,42 @@ export interface PickupLocationOpeningHours {
  * Returned from Shipit API with merchant pricing added
  */
 export interface PickupLocation {
-  /** Unique location ID */
+  /** Unique location ID from Shipit */
   id: string;
+  /** Shipit service ID */
+  serviceId: string;
   /** Location name */
   name: string;
   /** Street address */
   address1: string;
-  /** Postal code */
-  zipcode: string;
   /** City */
   city: string;
+  /** Postal code */
+  zipcode: string;
   /** Country code (e.g., "FI") */
   countryCode: string;
-  /** Shipit service ID */
-  serviceId: string;
-  /** Carrier name */
+  /** Carrier name (e.g., "Posti", "Matkahuolto") */
   carrier: string;
-  /** Shipit price in cents (may be null) */
-  price: number | null;
-  /** Merchant's price in cents (from store settings) */
-  merchantPrice: number | null;
   /** Carrier logo URL */
   carrierLogo: string;
-  /** Structured opening hours */
-  openingHours: PickupLocationOpeningHours | null;
-  /** Raw opening hours string */
-  openingHoursRaw: string | null;
   /** GPS latitude */
-  latitude: number;
+  latitude?: number;
   /** GPS longitude */
-  longitude: number;
+  longitude?: number;
   /** Distance from postal code in meters */
   distanceInMeters: number;
   /** Distance from postal code in kilometers */
   distanceInKilometers: number;
+  /** Location type */
+  type?: string;
+  /** Structured opening hours */
+  openingHours?: PickupLocationOpeningHours | null;
+  /** Raw opening hours string from Shipit */
+  openingHoursRaw?: string | null;
   /** Additional metadata */
-  metadata: unknown | null;
+  metadata?: unknown | null;
+  /** Merchant's price in cents (from store settings) */
+  merchantPrice: number | null;
 }
 
 // =============================================================================

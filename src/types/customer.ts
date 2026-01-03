@@ -4,12 +4,15 @@
  * Types for customer authentication and account management API endpoints.
  */
 
+import type { OrderStatus } from "./order.js";
+
 // =============================================================================
 // Customer Data
 // =============================================================================
 
 /**
- * Basic customer information returned from most customer endpoints
+ * Customer information returned from API endpoints.
+ * Some fields are optional depending on which endpoint is called.
  */
 export interface Customer {
   /** Unique customer ID */
@@ -20,28 +23,10 @@ export interface Customer {
   lastName: string;
   /** Customer's email address */
   email: string;
-}
-
-/**
- * Extended customer information returned after registration
- */
-export interface CustomerWithVerification extends Customer {
-  /** Account creation timestamp */
-  createdAt: string;
-  /** Email verification token (for sending verification emails) */
-  emailVerificationToken: string;
-  /** Token expiration timestamp */
-  emailVerificationExpiresAt: string;
-}
-
-/**
- * Customer information returned after login
- */
-export interface CustomerWithEmailStatus extends Customer {
-  /** Email verification timestamp (null if not verified) */
-  emailVerified: string | null;
-  /** Account creation timestamp */
-  createdAt: string;
+  /** Account creation timestamp (included in register, login, edit responses) */
+  createdAt?: string;
+  /** Email verification timestamp - null if not verified (only in login response) */
+  emailVerified?: string | null;
 }
 
 // =============================================================================
@@ -75,13 +60,14 @@ export interface LoginOptions {
 // =============================================================================
 
 /**
- * Response from successful registration
+ * Response from successful registration.
+ * Note: Verification email is sent server-side automatically.
  */
 export interface RegisterResponse {
   /** Whether the operation was successful */
   success: true;
-  /** Created customer with verification token */
-  customer: CustomerWithVerification;
+  /** Created customer (verification email sent automatically) */
+  customer: Customer;
   /** Success message */
   message: string;
 }
@@ -92,8 +78,8 @@ export interface RegisterResponse {
 export interface LoginResponse {
   /** Whether the operation was successful */
   success: true;
-  /** Authenticated customer data */
-  customer: CustomerWithEmailStatus;
+  /** Authenticated customer data (includes emailVerified and createdAt) */
+  customer: Customer;
   /** Success message */
   message: string;
   /** Session token for authenticated requests */
@@ -147,13 +133,12 @@ export interface VerifyEmailResponse {
 }
 
 /**
- * Response from resend verification email
+ * Response from resend verification email.
+ * Note: Verification email is sent server-side automatically.
  */
 export interface ResendVerificationResponse {
   /** Whether the operation was successful */
   success: true;
-  /** Updated customer with new verification token */
-  customer: CustomerWithVerification;
   /** Success message */
   message: string;
 }
@@ -175,21 +160,13 @@ export interface UpdateProfileData {
 }
 
 /**
- * Extended customer info returned after profile update
- */
-export interface CustomerWithCreatedAt extends Customer {
-  /** Account creation timestamp */
-  createdAt: string;
-}
-
-/**
  * Response from updating profile
  */
 export interface UpdateProfileResponse {
   /** Success message */
   message: string;
   /** Updated customer data */
-  customer: CustomerWithCreatedAt;
+  customer: Customer;
 }
 
 /**
@@ -266,16 +243,8 @@ export interface OrderShipmentMethod {
   logo: string | null;
 }
 
-/**
- * Order status values
- */
-export type OrderStatus =
-  | "PENDING"
-  | "PROCESSING"
-  | "SHIPPED"
-  | "DELIVERED"
-  | "CANCELLED"
-  | "REFUNDED";
+// Re-export OrderStatus from order.ts for backwards compatibility
+export type { OrderStatus };
 
 /**
  * A customer order

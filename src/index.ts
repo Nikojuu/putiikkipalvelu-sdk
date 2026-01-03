@@ -41,7 +41,6 @@ export type {
   ShipitShippingMethod,
   // Pickup locations (from shipping.ts)
   PickupLocation,
-  PickupLocationOpeningHours,
   ShipmentMethodsResponse,
   ShipmentMethodsWithLocationsResponse,
   // Categories (full types)
@@ -65,9 +64,6 @@ export type {
   CartCalculationResult,
   // Customer
   Customer,
-  CustomerWithVerification,
-  CustomerWithEmailStatus,
-  CustomerWithCreatedAt,
   RegisterData,
   LoginOptions,
   RegisterResponse,
@@ -104,7 +100,6 @@ export type {
   ConfirmationOrderLineItem,
   ConfirmationOrderCustomerData,
   ConfirmationOrderShipmentMethod,
-  ConfirmationOrderStatus,
   ConfirmationItemType,
   // Checkout
   CheckoutCustomerData,

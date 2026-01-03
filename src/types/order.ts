@@ -110,14 +110,16 @@ export interface ConfirmationOrderShipmentMethod {
 // =============================================================================
 
 /**
- * Order status values
+ * Order status values (matches Prisma OrderStatus enum)
  */
-export type ConfirmationOrderStatus =
+export type OrderStatus =
   | "PENDING"
+  | "COMPLETED"
+  | "CANCELLED"
+  | "FAILED"
   | "PAID"
   | "SHIPPED"
-  | "DELIVERED"
-  | "CANCELLED"
+  | "PARTIALLY_REFUNDED"
   | "REFUNDED";
 
 // =============================================================================
@@ -138,7 +140,7 @@ export interface Order {
   /** Total order amount in cents */
   totalAmount: number;
   /** Current order status */
-  status: ConfirmationOrderStatus;
+  status: OrderStatus;
   /** Human-readable order number */
   orderNumber: number;
   /** Order line items (products, variations, shipping) */

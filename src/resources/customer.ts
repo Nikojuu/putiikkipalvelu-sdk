@@ -41,11 +41,12 @@ export function createCustomerResource(fetcher: Fetcher) {
   return {
     /**
      * Register a new customer account.
-     * After registration, the customer must verify their email before logging in.
+     * A verification email is sent automatically by the server.
+     * The customer must verify their email before logging in.
      *
      * @param data - Registration data (firstName, lastName, email, password)
      * @param fetchOptions - Fetch options
-     * @returns Created customer with verification token
+     * @returns Created customer data and success message
      *
      * @example
      * ```typescript
@@ -56,7 +57,7 @@ export function createCustomerResource(fetcher: Fetcher) {
      *   password: 'securePassword123'
      * });
      *
-     * // Send verification email using customer.emailVerificationToken
+     * // Verification email is sent automatically by the server
      * console.log('Account created:', message);
      * ```
      */
@@ -227,21 +228,21 @@ export function createCustomerResource(fetcher: Fetcher) {
     },
 
     /**
-     * Resend the email verification token for an unverified customer.
-     * Generates a new token valid for 24 hours.
+     * Resend the verification email for an unverified customer.
+     * A new verification email is sent automatically by the server.
      *
      * @param customerId - The customer's ID (from failed login response)
      * @param fetchOptions - Fetch options
-     * @returns Updated customer with new verification token
+     * @returns Success message
      * @throws ValidationError if customer is already verified or not found
      *
      * @example
      * ```typescript
      * // After login fails with requiresVerification
-     * const { customer } = await client.customer.resendVerification(customerId);
+     * const { message } = await client.customer.resendVerification(customerId);
      *
-     * // Send new verification email using customer.emailVerificationToken
-     * await sendVerificationEmail(customer.email, customer.emailVerificationToken);
+     * // Verification email is sent automatically by the server
+     * console.log(message); // "Verification email sent."
      * ```
      */
     async resendVerification(

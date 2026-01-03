@@ -33,11 +33,16 @@ const mockCustomer = {
   email: "john@example.com",
 };
 
+// Customer returned from register (no longer includes verification token - sent server-side)
+const mockCustomerFromRegister = {
+  ...mockCustomer,
+  createdAt: "2024-01-15T10:00:00.000Z",
+};
+
+// @deprecated - kept for backwards compatibility with old tests
 const mockCustomerWithVerification = {
   ...mockCustomer,
   createdAt: "2024-01-15T10:00:00.000Z",
-  emailVerificationToken: "verification_token_abc123",
-  emailVerificationExpiresAt: "2024-01-16T10:00:00.000Z",
 };
 
 const mockCustomerWithEmailStatus = {
@@ -62,9 +67,10 @@ describe("customer resource", () => {
 
   describe("register", () => {
     it("should register a new customer", async () => {
+      // API now sends verification email server-side - no token in response
       const mockResponse = {
         success: true,
-        customer: mockCustomerWithVerification,
+        customer: mockCustomerFromRegister,
         message: "Account created. Please check your email to verify.",
       };
       mockFetch.mockResolvedValueOnce(
@@ -82,7 +88,7 @@ describe("customer resource", () => {
 
       expect(result.success).toBe(true);
       expect(result.customer.email).toBe("john@example.com");
-      expect(result.customer.emailVerificationToken).toBe("verification_token_abc123");
+      expect(result.customer.createdAt).toBe("2024-01-15T10:00:00.000Z");
       expect(mockFetch).toHaveBeenCalledWith(
         expect.stringContaining("/customer/(auth)/register"),
         expect.objectContaining({
@@ -116,7 +122,7 @@ describe("customer resource", () => {
         createMockResponse({
           json: async () => ({
             success: true,
-            customer: mockCustomerWithVerification,
+            customer: mockCustomerFromRegister,
             message: "Account created.",
           }),
         })
@@ -408,14 +414,10 @@ describe("customer resource", () => {
 
   describe("resendVerification", () => {
     it("should resend verification email", async () => {
+      // API now sends email server-side and only returns success message
       const mockResponse = {
         success: true,
-        customer: {
-          ...mockCustomer,
-          emailVerificationToken: "new_token_xyz",
-          emailVerificationExpiresAt: "2024-01-17T10:00:00.000Z",
-        },
-        message: "New verification token generated.",
+        message: "Verification email sent.",
       };
       mockFetch.mockResolvedValueOnce(
         createMockResponse({
@@ -426,7 +428,7 @@ describe("customer resource", () => {
       const result = await client.customer.resendVerification("cust_123");
 
       expect(result.success).toBe(true);
-      expect(result.customer.emailVerificationToken).toBe("new_token_xyz");
+      expect(result.message).toBe("Verification email sent.");
       expect(mockFetch).toHaveBeenCalledWith(
         expect.stringContaining("/customer/(auth)/resend-verification"),
         expect.objectContaining({
@@ -469,8 +471,7 @@ describe("customer resource", () => {
         createMockResponse({
           json: async () => ({
             success: true,
-            customer: mockCustomerWithVerification,
-            message: "New verification token generated.",
+            message: "Verification email sent.",
           }),
         })
       );
@@ -1154,7 +1155,7 @@ describe("customer resource", () => {
         createMockResponse({
           json: async () => ({
             success: true,
-            customer: mockCustomerWithVerification,
+            customer: mockCustomerFromRegister,
             message: "Account created.",
           }),
         })
