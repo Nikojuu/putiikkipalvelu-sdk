@@ -483,6 +483,178 @@ describe("customer resource", () => {
   });
 
   // ===========================================================================
+  // Password Reset Tests
+  // ===========================================================================
+
+  describe("forgotPassword", () => {
+    it("should request password reset and return generic success message", async () => {
+      // API always returns same response regardless of whether email exists
+      // This prevents email enumeration attacks
+      const mockResponse = {
+        success: true,
+        message:
+          "If an account exists with that email, password reset instructions have been sent.",
+      };
+      mockFetch.mockResolvedValueOnce(
+        createMockResponse({
+          json: async () => mockResponse,
+        })
+      );
+
+      const result = await client.customer.forgotPassword("john@example.com");
+
+      expect(result.success).toBe(true);
+      expect(result.message).toBe(
+        "If an account exists with that email, password reset instructions have been sent."
+      );
+      // Token is never exposed in response - email is sent server-side
+      expect("passwordResetToken" in result).toBe(false);
+      expect(mockFetch).toHaveBeenCalledWith(
+        expect.stringContaining("/customer/(auth)/forgot-password"),
+        expect.objectContaining({
+          method: "POST",
+          body: expect.stringContaining("john@example.com"),
+        })
+      );
+    });
+
+    it("should return same success response for non-existent email (prevents enumeration)", async () => {
+      // Same response for non-existent emails to prevent enumeration
+      const mockResponse = {
+        success: true,
+        message:
+          "If an account exists with that email, password reset instructions have been sent.",
+      };
+      mockFetch.mockResolvedValueOnce(
+        createMockResponse({
+          json: async () => mockResponse,
+        })
+      );
+
+      const result = await client.customer.forgotPassword(
+        "nonexistent@example.com"
+      );
+
+      expect(result.success).toBe(true);
+      expect(result.message).toBe(
+        "If an account exists with that email, password reset instructions have been sent."
+      );
+    });
+
+    it("should throw ValidationError for invalid email format", async () => {
+      mockFetch.mockResolvedValueOnce(
+        createMockResponse({
+          ok: false,
+          status: 400,
+          json: async () => ({
+            error: "Validation error",
+            details: { email: { _errors: ["Invalid email format"] } },
+          }),
+        })
+      );
+
+      await expect(
+        client.customer.forgotPassword("invalid-email")
+      ).rejects.toThrow(ValidationError);
+    });
+
+    it("should include email in request body", async () => {
+      mockFetch.mockResolvedValueOnce(
+        createMockResponse({
+          json: async () => ({
+            success: true,
+            message: "Password reset instructions sent to email",
+          }),
+        })
+      );
+
+      await client.customer.forgotPassword("test@example.com");
+
+      const callBody = JSON.parse(mockFetch.mock.calls[0][1].body);
+      expect(callBody).toEqual({ email: "test@example.com" });
+    });
+  });
+
+  describe("resetPassword", () => {
+    it("should reset password with valid token", async () => {
+      const mockResponse = {
+        success: true,
+        message: "Password reset successful. You can now log in with your new password.",
+      };
+      mockFetch.mockResolvedValueOnce(
+        createMockResponse({
+          json: async () => mockResponse,
+        })
+      );
+
+      const result = await client.customer.resetPassword(
+        "valid_reset_token_123",
+        "newSecurePassword123"
+      );
+
+      expect(result.success).toBe(true);
+      expect(result.message).toContain("Password reset successful");
+      expect(mockFetch).toHaveBeenCalledWith(
+        expect.stringContaining("/customer/(auth)/reset-password"),
+        expect.objectContaining({
+          method: "POST",
+          body: expect.stringContaining("valid_reset_token_123"),
+        })
+      );
+    });
+
+    it("should throw ValidationError for invalid or expired token", async () => {
+      mockFetch.mockResolvedValueOnce(
+        createMockResponse({
+          ok: false,
+          status: 400,
+          json: async () => ({ error: "Invalid or expired reset token" }),
+        })
+      );
+
+      await expect(
+        client.customer.resetPassword("expired_token", "newPassword123")
+      ).rejects.toThrow(ValidationError);
+    });
+
+    it("should throw ValidationError for short password", async () => {
+      mockFetch.mockResolvedValueOnce(
+        createMockResponse({
+          ok: false,
+          status: 400,
+          json: async () => ({
+            error: "Validation error",
+            details: { password: { _errors: ["Password must be at least 8 characters"] } },
+          }),
+        })
+      );
+
+      await expect(
+        client.customer.resetPassword("valid_token", "short")
+      ).rejects.toThrow(ValidationError);
+    });
+
+    it("should include token and password in request body", async () => {
+      mockFetch.mockResolvedValueOnce(
+        createMockResponse({
+          json: async () => ({
+            success: true,
+            message: "Password reset successful.",
+          }),
+        })
+      );
+
+      await client.customer.resetPassword("token_xyz", "newPassword123");
+
+      const callBody = JSON.parse(mockFetch.mock.calls[0][1].body);
+      expect(callBody).toEqual({
+        token: "token_xyz",
+        password: "newPassword123",
+      });
+    });
+  });
+
+  // ===========================================================================
   // Profile Management Tests
   // ===========================================================================
 

@@ -423,3 +423,29 @@ export interface RemoveFromWishlistResponse {
   /** Success message */
   message: string;
 }
+
+// =============================================================================
+// Password Reset Types
+// =============================================================================
+
+/**
+ * Response from forgot password request.
+ * Always returns same response to prevent email enumeration.
+ * Email with reset link is sent server-side (token never exposed to client).
+ */
+export interface ForgotPasswordResponse {
+  /** Whether the operation was successful */
+  success: true;
+  /** Success message (same regardless of whether email exists) */
+  message: string;
+}
+
+/**
+ * Response from successful password reset
+ */
+export interface ResetPasswordResponse {
+  /** Whether the operation was successful */
+  success: true;
+  /** Success message */
+  message: string;
+}

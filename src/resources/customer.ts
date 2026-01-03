@@ -22,6 +22,8 @@ import type {
   WishlistResponse,
   AddToWishlistResponse,
   RemoveFromWishlistResponse,
+  ForgotPasswordResponse,
+  ResetPasswordResponse,
 } from "../types/index.js";
 import type { Fetcher } from "../utils/fetch.js";
 
@@ -251,6 +253,86 @@ export function createCustomerResource(fetcher: Fetcher) {
         {
           method: "POST",
           body: { customerId },
+          ...fetchOptions,
+        }
+      );
+    },
+
+    /**
+     * Request a password reset for a customer account.
+     * The server sends a password reset email directly to the customer.
+     * Returns success even if email doesn't exist (to prevent email enumeration).
+     *
+     * Note: The reset token is never exposed to the client for security.
+     * The email is sent server-side with the reset link.
+     *
+     * @param email - Customer's email address
+     * @param fetchOptions - Fetch options
+     * @returns Generic success message (same whether email exists or not)
+     *
+     * @example
+     * ```typescript
+     * const response = await client.customer.forgotPassword('john@example.com');
+     *
+     * // Always show same message to user (email sent server-side)
+     * console.log(response.message);
+     * // "If an account exists with that email, password reset instructions have been sent."
+     * ```
+     */
+    async forgotPassword(
+      email: string,
+      fetchOptions?: FetchOptions
+    ): Promise<ForgotPasswordResponse> {
+      return fetcher.request<ForgotPasswordResponse>(
+        "/api/storefront/v1/customer/(auth)/forgot-password",
+        {
+          method: "POST",
+          body: { email },
+          ...fetchOptions,
+        }
+      );
+    },
+
+    /**
+     * Reset a customer's password using a valid reset token.
+     * The token is sent via email by the forgotPassword endpoint.
+     * After successful reset, all existing sessions are invalidated.
+     *
+     * @param token - Password reset token (from email link)
+     * @param password - New password (minimum 8 characters)
+     * @param fetchOptions - Fetch options
+     * @returns Success confirmation
+     * @throws ValidationError if token is invalid or expired
+     *
+     * @example
+     * ```typescript
+     * // Token comes from the reset email link
+     * const token = searchParams.get('token');
+     *
+     * try {
+     *   const { message } = await client.customer.resetPassword(token, newPassword);
+     *   console.log(message); // "Password reset successful..."
+     *
+     *   // Redirect to login page
+     *   redirect('/login?reset=success');
+     * } catch (error) {
+     *   if (error instanceof ValidationError) {
+     *     // Token invalid or expired
+     *     console.error('Please request a new password reset');
+     *   }
+     * }
+     * ```
+     */
+    async resetPassword(
+      token: string,
+      password: string,
+      fetchOptions?: FetchOptions
+    ): Promise<ResetPasswordResponse> {
+      return fetcher.request<ResetPasswordResponse>(
+        "/api/storefront/v1/customer/(auth)/reset-password",
+        {
+          method: "POST",
+          body: { token, password },
           ...fetchOptions,
         }
       );

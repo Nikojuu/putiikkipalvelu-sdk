@@ -96,6 +96,9 @@ export type {
   WishlistResponse,
   AddToWishlistResponse,
   RemoveFromWishlistResponse,
+  // Customer Password Reset
+  ForgotPasswordResponse,
+  ResetPasswordResponse,
   // Order (for confirmation/detail pages)
   Order,
   ConfirmationOrderLineItem,
