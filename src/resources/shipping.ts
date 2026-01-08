@@ -8,15 +8,26 @@ import type {
   FetchOptions,
   ShipmentMethodsResponse,
   ShipmentMethodsWithLocationsResponse,
+  CartItem,
 } from "../types/index.js";
 import type { Fetcher } from "../utils/fetch.js";
+
+/**
+ * Calculate total cart weight from cart items
+ */
+function calculateCartWeight(items: CartItem[]): number {
+  return items.reduce((total, item) => {
+    const itemWeight = item.variation?.weight ?? item.product.weight ?? 0.5;
+    return total + itemWeight * item.cartQuantity;
+  }, 0);
+}
 
 /**
  * Options for fetching shipment methods with weight-based filtering
  */
 export interface GetMethodsOptions extends FetchOptions {
-  /** Cart weight in kg - filters methods by max weight */
-  cartWeight?: number;
+  /** Cart items - weight will be calculated automatically */
+  cartItems?: CartItem[];
 }
 
 /**
@@ -28,7 +39,7 @@ export function createShippingResource(fetcher: Fetcher) {
      * Get all available shipment methods for the store.
      * Returns methods without pickup locations - use `getWithLocations` for postal code specific data.
      *
-     * @param options - Fetch options including optional cartWeight for weight-based filtering
+     * @param options - Fetch options including optional cartItems for weight-based filtering
      * @returns Available shipment methods
      *
      * @example
@@ -42,15 +53,9 @@ export function createShippingResource(fetcher: Fetcher) {
      *
      * @example Weight-based filtering
      * ```typescript
-     * // Calculate cart weight
-     * const cartWeight = cartItems.reduce((total, item) => {
-     *   const weight = item.variation?.weight ?? item.product.weight;
-     *   return total + weight * item.quantity;
-     * }, 0);
-     *
-     * // Get methods that support this weight
+     * // Pass cart items - SDK calculates weight automatically
      * const { shipmentMethods } = await client.shipping.getMethods({
-     *   cartWeight: cartWeight
+     *   cartItems: cartItems
      * });
      * ```
      */
@@ -58,8 +63,9 @@ export function createShippingResource(fetcher: Fetcher) {
       options?: GetMethodsOptions
     ): Promise<ShipmentMethodsResponse> {
       const params = new URLSearchParams();
-      if (options?.cartWeight !== undefined) {
-        params.set("cartWeight", options.cartWeight.toString());
+      if (options?.cartItems?.length) {
+        const cartWeight = calculateCartWeight(options.cartItems);
+        params.set("cartWeight", cartWeight.toString());
       }
       const queryString = params.toString();
       const url = `/api/storefront/v1/shipment-methods${queryString ? `?${queryString}` : ""}`;
@@ -75,7 +81,7 @@ export function createShippingResource(fetcher: Fetcher) {
      * Calls the Shipit API to fetch nearby pickup points (parcel lockers, etc.)
      *
      * @param postalCode - Customer's postal code (e.g., "00100")
-     * @param options - Fetch options including optional cartWeight for weight-based filtering
+     * @param options - Fetch options including optional cartItems for weight-based filtering
      * @returns Shipment methods and nearby pickup locations with pricing
      *
      * @example
@@ -95,10 +101,10 @@ export function createShippingResource(fetcher: Fetcher) {
      * ```typescript
      * const { shipmentMethods, pricedLocations } = await client.shipping.getWithLocations(
      *   "00100",
-     *   { cartWeight: 2.5 }
+     *   { cartItems: cartItems }
      * );
      *
-     * // Only shows methods where maxWeight >= 2.5kg
+     * // Only shows methods that support the cart's total weight
      * ```
      */
     async getWithLocations(
@@ -106,8 +112,9 @@ export function createShippingResource(fetcher: Fetcher) {
       options?: GetMethodsOptions
     ): Promise<ShipmentMethodsWithLocationsResponse> {
       const params = new URLSearchParams();
-      if (options?.cartWeight !== undefined) {
-        params.set("cartWeight", options.cartWeight.toString());
+      if (options?.cartItems?.length) {
+        const cartWeight = calculateCartWeight(options.cartItems);
+        params.set("cartWeight", cartWeight.toString());
       }
       const queryString = params.toString();
       const url = `/api/storefront/v1/shipment-methods/${encodeURIComponent(postalCode)}${queryString ? `?${queryString}` : ""}`;
