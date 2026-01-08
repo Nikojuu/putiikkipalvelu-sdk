@@ -45,6 +45,8 @@ export interface ProductVariationListing {
  * Full product variation (for product detail page)
  */
 export interface ProductVariation extends ProductVariationListing {
+  /** Variation weight in kg (null = use product weight) */
+  weight: number | null;
   /** Available quantity (null = unlimited) */
   quantity: number | null;
   /** Stock keeping unit */
@@ -99,6 +101,8 @@ export interface Product {
  * Used by: /product/{slug}
  */
 export interface ProductDetail extends Omit<Product, "variations"> {
+  /** Product weight in kg (for shipping calculations) */
+  weight: number;
   /** Stock keeping unit */
   sku: string | null;
   /** SEO meta title */

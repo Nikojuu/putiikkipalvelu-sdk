@@ -206,8 +206,10 @@ export interface ShipitShippingMethod {
   length: number;
   /** Package width in cm */
   width: number;
-  /** Package weight in kg */
+  /** Package weight in kg @deprecated Use maxWeight instead */
   weight: number;
+  /** Maximum package weight in kg for this shipping tier */
+  maxWeight: number;
   /** Service type */
   type: string;
   /** Shipit price in cents */

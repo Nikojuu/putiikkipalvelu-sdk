@@ -12,6 +12,14 @@ import type {
 import type { Fetcher } from "../utils/fetch.js";
 
 /**
+ * Options for fetching shipment methods with weight-based filtering
+ */
+export interface GetMethodsOptions extends FetchOptions {
+  /** Cart weight in kg - filters methods by max weight */
+  cartWeight?: number;
+}
+
+/**
  * Shipping resource for fetching shipment methods and pickup locations
  */
 export function createShippingResource(fetcher: Fetcher) {
@@ -20,7 +28,7 @@ export function createShippingResource(fetcher: Fetcher) {
      * Get all available shipment methods for the store.
      * Returns methods without pickup locations - use `getWithLocations` for postal code specific data.
      *
-     * @param options - Fetch options (caching, headers, etc.)
+     * @param options - Fetch options including optional cartWeight for weight-based filtering
      * @returns Available shipment methods
      *
      * @example
@@ -31,15 +39,35 @@ export function createShippingResource(fetcher: Fetcher) {
      *   console.log(`${method.name}: ${method.price / 100}€`);
      * });
      * ```
+     *
+     * @example Weight-based filtering
+     * ```typescript
+     * // Calculate cart weight
+     * const cartWeight = cartItems.reduce((total, item) => {
+     *   const weight = item.variation?.weight ?? item.product.weight;
+     *   return total + weight * item.quantity;
+     * }, 0);
+     *
+     * // Get methods that support this weight
+     * const { shipmentMethods } = await client.shipping.getMethods({
+     *   cartWeight: cartWeight
+     * });
+     * ```
      */
-    async getMethods(options?: FetchOptions): Promise<ShipmentMethodsResponse> {
-      return fetcher.request<ShipmentMethodsResponse>(
-        "/api/storefront/v1/shipment-methods",
-        {
-          method: "GET",
-          ...options,
-        }
-      );
+    async getMethods(
+      options?: GetMethodsOptions
+    ): Promise<ShipmentMethodsResponse> {
+      const params = new URLSearchParams();
+      if (options?.cartWeight !== undefined) {
+        params.set("cartWeight", options.cartWeight.toString());
+      }
+      const queryString = params.toString();
+      const url = `/api/storefront/v1/shipment-methods${queryString ? `?${queryString}` : ""}`;
+
+      return fetcher.request<ShipmentMethodsResponse>(url, {
+        method: "GET",
+        ...options,
+      });
     },
 
     /**
@@ -47,7 +75,7 @@ export function createShippingResource(fetcher: Fetcher) {
      * Calls the Shipit API to fetch nearby pickup points (parcel lockers, etc.)
      *
      * @param postalCode - Customer's postal code (e.g., "00100")
-     * @param options - Fetch options (caching, headers, etc.)
+     * @param options - Fetch options including optional cartWeight for weight-based filtering
      * @returns Shipment methods and nearby pickup locations with pricing
      *
      * @example
@@ -63,26 +91,31 @@ export function createShippingResource(fetcher: Fetcher) {
      * });
      * ```
      *
-     * @example Filter by carrier
+     * @example Weight-based filtering with postal code
      * ```typescript
-     * const { pricedLocations } = await client.shipping.getWithLocations("00100");
-     *
-     * const postiLocations = pricedLocations.filter(
-     *   loc => loc.carrier === "Posti"
+     * const { shipmentMethods, pricedLocations } = await client.shipping.getWithLocations(
+     *   "00100",
+     *   { cartWeight: 2.5 }
      * );
+     *
+     * // Only shows methods where maxWeight >= 2.5kg
      * ```
      */
     async getWithLocations(
       postalCode: string,
-      options?: FetchOptions
+      options?: GetMethodsOptions
     ): Promise<ShipmentMethodsWithLocationsResponse> {
-      return fetcher.request<ShipmentMethodsWithLocationsResponse>(
-        `/api/storefront/v1/shipment-methods/${encodeURIComponent(postalCode)}`,
-        {
-          method: "GET",
-          ...options,
-        }
-      );
+      const params = new URLSearchParams();
+      if (options?.cartWeight !== undefined) {
+        params.set("cartWeight", options.cartWeight.toString());
+      }
+      const queryString = params.toString();
+      const url = `/api/storefront/v1/shipment-methods/${encodeURIComponent(postalCode)}${queryString ? `?${queryString}` : ""}`;
+
+      return fetcher.request<ShipmentMethodsWithLocationsResponse>(url, {
+        method: "GET",
+        ...options,
+      });
     },
   };
 }
