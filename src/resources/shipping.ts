@@ -6,7 +6,6 @@
 
 import type {
   FetchOptions,
-  ShipmentMethodsResponse,
   ShipmentMethodsWithLocationsResponse,
   CartItem,
 } from "../types/index.js";
@@ -36,74 +35,37 @@ export interface GetMethodsOptions extends FetchOptions {
 export function createShippingResource(fetcher: Fetcher) {
   return {
     /**
-     * Get all available shipment methods for the store.
-     * Returns methods without pickup locations - use `getWithLocations` for postal code specific data.
+     * Get shipping options for a specific postal code.
+     * Returns home delivery methods and pickup locations.
      *
+     * @param postalCode - Customer's postal code (e.g., "00100")
      * @param options - Fetch options including optional cartItems for weight-based filtering
-     * @returns Available shipment methods
+     * @returns Home delivery methods and pickup locations
      *
      * @example
      * ```typescript
-     * const { shipmentMethods } = await client.shipping.getMethods();
+     * const { homeDeliveryMethods, pickupLocations } = await client.shipping.getWithLocations("00100");
      *
-     * shipmentMethods.forEach(method => {
+     * // Show home delivery options
+     * homeDeliveryMethods.forEach(method => {
      *   console.log(`${method.name}: ${method.price / 100}€`);
+     * });
+     *
+     * // Show pickup locations
+     * pickupLocations.forEach(location => {
+     *   console.log(`${location.name} - ${location.carrier}`);
+     *   console.log(`  ${location.address1}, ${location.city}`);
+     *   console.log(`  ${location.distanceInKilometers.toFixed(1)} km away`);
+     *   console.log(`  Price: ${location.price / 100}€`);
      * });
      * ```
      *
      * @example Weight-based filtering
      * ```typescript
-     * // Pass cart items - SDK calculates weight automatically
-     * const { shipmentMethods } = await client.shipping.getMethods({
-     *   cartItems: cartItems
-     * });
-     * ```
-     */
-    async getMethods(
-      options?: GetMethodsOptions
-    ): Promise<ShipmentMethodsResponse> {
-      const params = new URLSearchParams();
-      if (options?.cartItems?.length) {
-        const cartWeight = calculateCartWeight(options.cartItems);
-        params.set("cartWeight", cartWeight.toString());
-      }
-      const queryString = params.toString();
-      const url = `/api/storefront/v1/shipment-methods${queryString ? `?${queryString}` : ""}`;
-
-      return fetcher.request<ShipmentMethodsResponse>(url, {
-        method: "GET",
-        ...options,
-      });
-    },
-
-    /**
-     * Get shipment methods with pickup locations for a specific postal code.
-     * Calls the Shipit API to fetch nearby pickup points (parcel lockers, etc.)
-     *
-     * @param postalCode - Customer's postal code (e.g., "00100")
-     * @param options - Fetch options including optional cartItems for weight-based filtering
-     * @returns Shipment methods and nearby pickup locations with pricing
-     *
-     * @example
-     * ```typescript
-     * const { shipmentMethods, pricedLocations } = await client.shipping.getWithLocations("00100");
-     *
-     * // Show pickup locations
-     * pricedLocations.forEach(location => {
-     *   console.log(`${location.name} - ${location.carrier}`);
-     *   console.log(`  ${location.address1}, ${location.city}`);
-     *   console.log(`  ${location.distanceInKilometers.toFixed(1)} km away`);
-     *   console.log(`  Price: ${(location.merchantPrice ?? 0) / 100}€`);
-     * });
-     * ```
-     *
-     * @example Weight-based filtering with postal code
-     * ```typescript
-     * const { shipmentMethods, pricedLocations } = await client.shipping.getWithLocations(
+     * const { homeDeliveryMethods, pickupLocations } = await client.shipping.getWithLocations(
      *   "00100",
      *   { cartItems: cartItems }
      * );
-     *
      * // Only shows methods that support the cart's total weight
      * ```
      */

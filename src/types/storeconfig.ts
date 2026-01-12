@@ -105,7 +105,7 @@ export interface FeatureFlags {
 // =============================================================================
 
 /** Campaign type */
-export type CampaignType = "FREE_SHIPPING" | "BUY_X_PAY_Y";
+export type CampaignType = "BUY_X_PAY_Y";
 
 /**
  * Store campaign (promotion)
@@ -131,24 +131,8 @@ export interface Campaign {
   createdAt: string;
   /** Last update timestamp (ISO 8601) */
   updatedAt: string;
-  /** Free shipping campaign details (if type is FREE_SHIPPING) */
-  FreeShippingCampaign: FreeShippingCampaign | null;
   /** Buy X Pay Y campaign details (if type is BUY_X_PAY_Y) */
   BuyXPayYCampaign: BuyXPayYCampaign | null;
-}
-
-/**
- * Free shipping campaign details
- */
-export interface FreeShippingCampaign {
-  /** Unique identifier */
-  id: string;
-  /** Parent campaign ID */
-  campaignId: string;
-  /** Minimum spend in cents to qualify for free shipping */
-  minimumSpend: number;
-  /** Shipping methods eligible for free shipping */
-  shipmentMethods: ShipmentMethod[];
 }
 
 /**
@@ -174,18 +158,19 @@ export interface BuyXPayYCampaign {
 /**
  * Shipit shipping method details
  * Represents a shipping service synced from the Shipit API
+ * Supports multiple carriers in a single method for multi-carrier shipping
  */
 export interface ShipitShippingMethod {
   /** Unique ID */
   id: string;
-  /** Shipit service identifier */
-  serviceId: string;
+  /** Shipit service identifiers for all selected carriers */
+  serviceIds: string[];
   /** Service name */
   name: string;
-  /** Carrier name (e.g., "Posti", "Matkahuolto") */
-  carrier: string;
-  /** Carrier logo URL */
-  logo: string;
+  /** Carrier names (e.g., ["Posti", "Matkahuolto"]) */
+  carriers: string[];
+  /** Carrier logo URLs */
+  logos: string[];
   /** Whether pickup is included */
   pickUpIncluded: boolean;
   /** Whether home delivery is available */
@@ -214,10 +199,8 @@ export interface ShipitShippingMethod {
   type: string;
   /** Shipit price in cents */
   price: number;
-  /** Whether pickup point selection is available */
-  pickupPoint: boolean;
-  /** Whether only parcel locker delivery is available */
-  onlyParchelLocker: boolean;
+  /** Whether to show pickup point selector (true) or home delivery only (false) */
+  showPickupPoints: boolean;
   /** Reference to parent shipment method */
   shipmentMethodId: string;
   /** Created timestamp */

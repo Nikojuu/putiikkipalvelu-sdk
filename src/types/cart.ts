@@ -145,22 +145,6 @@ export interface CalculatedCartItem {
 }
 
 /**
- * Free shipping eligibility status
- */
-export interface FreeShippingStatus {
-  /** Whether the cart qualifies for free shipping */
-  isEligible: boolean;
-  /** Minimum spend required for free shipping (in cents) */
-  minimumSpend: number;
-  /** Amount remaining to qualify for free shipping (in cents) */
-  remainingAmount: number;
-  /** Name of the free shipping campaign */
-  campaignName?: string;
-  /** IDs of shipment methods eligible for free shipping (when isEligible is true) */
-  eligibleShipmentMethodIds?: string[];
-}
-
-/**
  * Result of cart calculation with campaigns applied
  */
 export interface CartCalculationResult {
@@ -172,6 +156,4 @@ export interface CartCalculationResult {
   originalTotal: number;
   /** Total savings from campaigns (in cents) */
   totalSavings: number;
-  /** Free shipping eligibility status */
-  freeShipping: FreeShippingStatus;
 }

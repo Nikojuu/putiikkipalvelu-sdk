@@ -34,14 +34,12 @@ export type {
   // Campaigns
   Campaign,
   CampaignType,
-  FreeShippingCampaign,
   BuyXPayYCampaign,
   // Shipping
   ShipmentMethod,
   ShipitShippingMethod,
   // Pickup locations (from shipping.ts)
   PickupLocation,
-  ShipmentMethodsResponse,
   ShipmentMethodsWithLocationsResponse,
   // Categories (full types)
   Category,
@@ -60,7 +58,6 @@ export type {
   // Pricing & Calculation Types
   PriceInfo,
   CalculatedCartItem,
-  FreeShippingStatus,
   CartCalculationResult,
   // Customer
   Customer,

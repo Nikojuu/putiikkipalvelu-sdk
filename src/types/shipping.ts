@@ -27,7 +27,7 @@ export interface PickupLocationOpeningHours {
 
 /**
  * A pickup location (parcel locker, pickup point, etc.)
- * Returned from Shipit API with merchant pricing added
+ * Returned from Shipit API with shipmentMethodId and price attached
  */
 export interface PickupLocation {
   /** Unique location ID from Shipit */
@@ -56,7 +56,7 @@ export interface PickupLocation {
   distanceInMeters: number;
   /** Distance from postal code in kilometers */
   distanceInKilometers: number;
-  /** Location type */
+  /** Location type (e.g., "parcel_locker", "service_point", "outdoor_parcel_locker") */
   type?: string;
   /** Structured opening hours */
   openingHours?: PickupLocationOpeningHours | null;
@@ -64,8 +64,10 @@ export interface PickupLocation {
   openingHoursRaw?: string | null;
   /** Additional metadata */
   metadata?: unknown | null;
-  /** Merchant's price in cents (from store settings) */
-  merchantPrice: number | null;
+  /** The shipment method ID this location belongs to */
+  shipmentMethodId: string;
+  /** Price in cents (from store settings) */
+  price: number;
 }
 
 // =============================================================================
@@ -73,20 +75,11 @@ export interface PickupLocation {
 // =============================================================================
 
 /**
- * Response from GET /shipment-methods
- */
-export interface ShipmentMethodsResponse {
-  /** Available shipment methods */
-  shipmentMethods: ShipmentMethod[];
-}
-
-/**
  * Response from GET /shipment-methods/[postalCode]
- * Includes pickup locations near the postal code
  */
 export interface ShipmentMethodsWithLocationsResponse {
-  /** Available shipment methods */
-  shipmentMethods: ShipmentMethod[];
-  /** Pickup locations near the postal code with merchant pricing */
-  pricedLocations: PickupLocation[];
+  /** Home delivery methods (custom methods + Shipit home delivery) */
+  homeDeliveryMethods: ShipmentMethod[];
+  /** Pickup locations with shipmentMethodId and price attached */
+  pickupLocations: PickupLocation[];
 }

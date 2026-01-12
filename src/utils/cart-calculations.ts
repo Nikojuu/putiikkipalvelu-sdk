@@ -8,7 +8,6 @@ import type { CartItem } from "../types/cart.js";
 import type { Campaign } from "../types/storeconfig.js";
 import type {
   CalculatedCartItem,
-  FreeShippingStatus,
   CartCalculationResult,
 } from "../types/cart.js";
 import { getPriceInfo } from "./pricing.js";
@@ -26,13 +25,11 @@ interface EligibleUnit {
 /**
  * Calculate cart totals with campaign discounts applied.
  *
- * Supports two campaign types:
- * - **FREE_SHIPPING**: Free shipping when cart total exceeds minimum spend
- * - **BUY_X_PAY_Y**: Buy X items, pay for Y (e.g., Buy 3 Pay 2 = 1 free item)
+ * Supports BUY_X_PAY_Y campaigns: Buy X items, pay for Y (e.g., Buy 3 Pay 2 = 1 free item)
  *
  * @param items - Cart items to calculate
  * @param campaigns - Active campaigns to apply
- * @returns Calculation result with totals, savings, and free shipping status
+ * @returns Calculation result with totals and savings
  *
  * @example
  * ```typescript
@@ -40,7 +37,6 @@ interface EligibleUnit {
  *
  * console.log(result.cartTotal);     // 4990 (cents)
  * console.log(result.totalSavings);  // 1990 (cents)
- * console.log(result.freeShipping.isEligible); // true
  *
  * // Render calculated items
  * result.calculatedItems.forEach(({ item, paidQuantity, freeQuantity }) => {
@@ -53,9 +49,6 @@ export function calculateCartWithCampaigns(
   campaigns: Campaign[]
 ): CartCalculationResult {
   // Find applicable campaigns
-  const freeShippingCampaign = campaigns.find(
-    (c) => c.type === "FREE_SHIPPING" && c.isActive
-  );
   const buyXPayYCampaign = campaigns.find(
     (c) => c.type === "BUY_X_PAY_Y" && c.isActive
   );
@@ -75,17 +68,11 @@ export function calculateCartWithCampaigns(
       totalQuantity: item.cartQuantity,
     }));
 
-    const freeShipping = calculateFreeShipping(
-      originalTotal,
-      freeShippingCampaign
-    );
-
     return {
       calculatedItems,
       cartTotal: originalTotal,
       originalTotal,
       totalSavings: 0,
-      freeShipping,
     };
   }
 
@@ -130,17 +117,11 @@ export function calculateCartWithCampaigns(
       totalQuantity: item.cartQuantity,
     }));
 
-    const freeShipping = calculateFreeShipping(
-      originalTotal,
-      freeShippingCampaign
-    );
-
     return {
       calculatedItems,
       cartTotal: originalTotal,
       originalTotal,
       totalSavings: 0,
-      freeShipping,
     };
   }
 
@@ -180,47 +161,10 @@ export function calculateCartWithCampaigns(
   // Calculate final cart total after Buy X Pay Y discounts
   const cartTotal = originalTotal - totalSavings;
 
-  // Calculate free shipping using the final cart total
-  const freeShipping = calculateFreeShipping(cartTotal, freeShippingCampaign);
-
   return {
     calculatedItems,
     cartTotal,
     originalTotal,
     totalSavings,
-    freeShipping,
-  };
-}
-
-/**
- * Calculate free shipping eligibility
- */
-function calculateFreeShipping(
-  cartTotal: number,
-  campaign?: Campaign
-): FreeShippingStatus {
-  if (!campaign?.FreeShippingCampaign) {
-    return {
-      isEligible: false,
-      minimumSpend: 0,
-      remainingAmount: 0,
-    };
-  }
-
-  const minimumSpend = campaign.FreeShippingCampaign.minimumSpend;
-  const isEligible = cartTotal >= minimumSpend;
-  const remainingAmount = isEligible ? 0 : minimumSpend - cartTotal;
-
-  // Extract eligible shipment method IDs from the campaign
-  const eligibleShipmentMethodIds = campaign.FreeShippingCampaign.shipmentMethods?.map(
-    (method) => method.id
-  );
-
-  return {
-    isEligible,
-    minimumSpend,
-    remainingAmount,
-    campaignName: campaign.name,
-    eligibleShipmentMethodIds,
   };
 }
