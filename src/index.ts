@@ -38,9 +38,11 @@ export type {
   // Shipping
   ShipmentMethod,
   ShipitShippingMethod,
-  // Pickup locations (from shipping.ts)
-  PickupLocation,
-  ShipmentMethodsWithLocationsResponse,
+  // Shipping options
+  ShipmentMethodsResponse,
+  HomeDeliveryOption,
+  PickupPointOption,
+  OpeningHours,
   // Categories (full types)
   Category,
   CategoryResponse,
@@ -128,3 +130,4 @@ export {
   ValidationError,
   VerificationRequiredError,
 } from "./utils/errors.js";
+

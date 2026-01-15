@@ -6,10 +6,12 @@
 
 import type {
   FetchOptions,
-  ShipmentMethodsWithLocationsResponse,
+  ShipmentMethodsResponse,
   CartItem,
+  Campaign,
 } from "../types/index.js";
 import type { Fetcher } from "../utils/fetch.js";
+import { calculateCartWithCampaigns } from "../utils/cart-calculations.js";
 
 /**
  * Calculate total cart weight from cart items
@@ -22,11 +24,30 @@ function calculateCartWeight(items: CartItem[]): number {
 }
 
 /**
+ * Calculate total cart value in cents from cart items
+ * Uses sale price if available, otherwise regular price
+ */
+function calculateCartTotal(items: CartItem[]): number {
+  return items.reduce((total, item) => {
+    // Use variation price if exists, otherwise product price
+    // Prefer salePrice over regular price
+    const itemPrice = item.variation
+      ? (item.variation.salePrice ?? item.variation.price)
+      : (item.product.salePrice ?? item.product.price);
+    return total + itemPrice * item.cartQuantity;
+  }, 0);
+}
+
+/**
  * Options for fetching shipment methods with weight-based filtering
  */
-export interface GetMethodsOptions extends FetchOptions {
-  /** Cart items - weight will be calculated automatically */
+export interface GetShippingOptionsParams extends FetchOptions {
+  /** Cart items - weight and total will be calculated automatically */
   cartItems?: CartItem[];
+  /** Active campaigns - used to calculate cart total with discounts for free shipping */
+  campaigns?: Campaign[];
+  /** Country code (default: "FI") */
+  country?: string;
 }
 
 /**
@@ -36,55 +57,89 @@ export function createShippingResource(fetcher: Fetcher) {
   return {
     /**
      * Get shipping options for a specific postal code.
-     * Returns home delivery methods and pickup locations.
+     * Returns pickup points and home delivery options in a unified format.
+     *
+     * **Pickup points are returned first** as they are more popular in Finland.
      *
      * @param postalCode - Customer's postal code (e.g., "00100")
      * @param options - Fetch options including optional cartItems for weight-based filtering
-     * @returns Home delivery methods and pickup locations
+     * @returns Unified shipping options (pickupPoints sorted by distance, homeDelivery sorted by price)
      *
      * @example
      * ```typescript
-     * const { homeDeliveryMethods, pickupLocations } = await client.shipping.getWithLocations("00100");
+     * const { pickupPoints, homeDelivery } = await client.shipping.getOptions("00100");
      *
-     * // Show home delivery options
-     * homeDeliveryMethods.forEach(method => {
-     *   console.log(`${method.name}: ${method.price / 100}€`);
+     * // Show pickup points (more popular in Finland)
+     * pickupPoints.forEach(point => {
+     *   console.log(`${point.name} - ${point.carrier}`);
+     *   console.log(`  ${point.address}, ${point.city}`);
+     *   console.log(`  ${(point.distance! / 1000).toFixed(1)} km away`);
+     *   console.log(`  Price: ${point.price / 100}€`);
      * });
      *
-     * // Show pickup locations
-     * pickupLocations.forEach(location => {
-     *   console.log(`${location.name} - ${location.carrier}`);
-     *   console.log(`  ${location.address1}, ${location.city}`);
-     *   console.log(`  ${location.distanceInKilometers.toFixed(1)} km away`);
-     *   console.log(`  Price: ${location.price / 100}€`);
+     * // Show home delivery options
+     * homeDelivery.forEach(option => {
+     *   console.log(`${option.name}: ${option.price / 100}€`);
+     *   if (option.estimatedDelivery) {
+     *     console.log(`  Delivery: ${option.estimatedDelivery} days`);
+     *   }
      * });
      * ```
      *
      * @example Weight-based filtering
      * ```typescript
-     * const { homeDeliveryMethods, pickupLocations } = await client.shipping.getWithLocations(
-     *   "00100",
-     *   { cartItems: cartItems }
-     * );
+     * const options = await client.shipping.getOptions("00100", {
+     *   cartItems: cartItems
+     * });
      * // Only shows methods that support the cart's total weight
      * ```
+     *
+     * @example International shipping
+     * ```typescript
+     * const options = await client.shipping.getOptions("112 22", {
+     *   country: "SE"
+     * });
+     * ```
      */
-    async getWithLocations(
+    async getOptions(
       postalCode: string,
-      options?: GetMethodsOptions
-    ): Promise<ShipmentMethodsWithLocationsResponse> {
+      options?: GetShippingOptionsParams
+    ): Promise<ShipmentMethodsResponse> {
       const params = new URLSearchParams();
+
       if (options?.cartItems?.length) {
         const cartWeight = calculateCartWeight(options.cartItems);
         params.set("cartWeight", cartWeight.toString());
+
+        // Send cart total for free shipping calculation
+        // Use calculateCartWithCampaigns if campaigns provided (accounts for discounts)
+        const cartTotal = options.campaigns
+          ? calculateCartWithCampaigns(options.cartItems, options.campaigns).cartTotal
+          : calculateCartTotal(options.cartItems);
+        params.set("cartTotal", cartTotal.toString());
       }
+
+      if (options?.country) {
+        params.set("country", options.country);
+      }
+
       const queryString = params.toString();
       const url = `/api/storefront/v1/shipment-methods/${encodeURIComponent(postalCode)}${queryString ? `?${queryString}` : ""}`;
 
-      return fetcher.request<ShipmentMethodsWithLocationsResponse>(url, {
+      return fetcher.request<ShipmentMethodsResponse>(url, {
         method: "GET",
         ...options,
       });
+    },
+
+    /**
+     * @deprecated Use getOptions() instead. This method is kept for backwards compatibility.
+     */
+    async getWithLocations(
+      postalCode: string,
+      options?: GetShippingOptionsParams
+    ): Promise<ShipmentMethodsResponse> {
+      return this.getOptions(postalCode, options);
     },
   };
 }

@@ -36,6 +36,8 @@ export interface CheckoutShipmentMethod {
   shipmentMethodId: string;
   /** ID of pickup point (for pickup delivery methods) */
   pickupId: string | null;
+  /** Shipit service ID (for Shipit pickup points) */
+  serviceId: string | null;
 }
 
 /**

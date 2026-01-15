@@ -2,19 +2,17 @@
  * Shipping Types
  *
  * Types for shipment methods and pickup locations.
- * ShipmentMethod and ShipitShippingMethod are re-exported from storeconfig.
+ * Uses unified response format that works with any provider (Shipit, custom, future integrations).
  */
 
-import type { ShipmentMethod } from "./storeconfig.js";
-
 // =============================================================================
-// Pickup Location (from Shipit API)
+// Opening Hours
 // =============================================================================
 
 /**
  * Opening hours for a pickup location
  */
-export interface PickupLocationOpeningHours {
+export interface OpeningHours {
   monday: string[];
   tuesday: string[];
   wednesday: string[];
@@ -25,61 +23,93 @@ export interface PickupLocationOpeningHours {
   exceptions: string[];
 }
 
+// =============================================================================
+// Home Delivery Option
+// =============================================================================
+
 /**
- * A pickup location (parcel locker, pickup point, etc.)
- * Returned from Shipit API with shipmentMethodId and price attached
+ * A home delivery option (works for any provider)
  */
-export interface PickupLocation {
-  /** Unique location ID from Shipit */
+export interface HomeDeliveryOption {
+  /** ShipmentMethods.id - unique identifier for this method */
   id: string;
-  /** Shipit service ID */
-  serviceId: string;
-  /** Location name */
+  /** Display name (e.g., "Posti Kotipaketti") */
   name: string;
-  /** Street address */
-  address1: string;
-  /** City */
-  city: string;
-  /** Postal code */
-  zipcode: string;
-  /** Country code (e.g., "FI") */
-  countryCode: string;
-  /** Carrier name (e.g., "Posti", "Matkahuolto") */
-  carrier: string;
-  /** Carrier logo URL */
-  carrierLogo: string;
-  /** GPS latitude */
-  latitude?: number;
-  /** GPS longitude */
-  longitude?: number;
-  /** Distance from postal code in meters */
-  distanceInMeters: number;
-  /** Distance from postal code in kilometers */
-  distanceInKilometers: number;
-  /** Location type (e.g., "parcel_locker", "service_point", "outdoor_parcel_locker") */
-  type?: string;
-  /** Structured opening hours */
-  openingHours?: PickupLocationOpeningHours | null;
-  /** Raw opening hours string from Shipit */
-  openingHoursRaw?: string | null;
-  /** Additional metadata */
-  metadata?: unknown | null;
-  /** The shipment method ID this location belongs to */
-  shipmentMethodId: string;
-  /** Price in cents (from store settings) */
+  /** Optional description */
+  description: string | null;
+  /** Price in cents (0 if free shipping applies) */
   price: number;
+  /** Original price in cents (always the base price before free shipping) */
+  originalPrice: number;
+  /** Free shipping threshold in cents, null = no free shipping available for this method */
+  freeShippingThreshold: number | null;
+  /** Carrier logo URL */
+  logo: string | null;
+  /** Provider type */
+  provider: "shipit" | "custom";
+  /** Carrier name (e.g., "Posti", "Matkahuolto") - null for custom methods */
+  carrier: string | null;
+  /** Estimated delivery time (e.g., "1-3") - null if not available */
+  estimatedDelivery: string | null;
 }
 
 // =============================================================================
-// API Responses
+// Pickup Point Option
+// =============================================================================
+
+/**
+ * A pickup point option (parcel locker, service point, etc.)
+ * Works for any provider that supports pickup locations.
+ */
+export interface PickupPointOption {
+  /** Unique pickup point ID from carrier */
+  id: string;
+  /** ShipmentMethods.id - needed for checkout */
+  shipmentMethodId: string;
+  /** Shipit service ID - needed for checkout and shipment creation */
+  serviceId: string;
+  /** Location name (e.g., "Lidl Graniittitalo") */
+  name: string;
+  /** Street address */
+  address: string;
+  /** City */
+  city: string;
+  /** Postal code */
+  postalCode: string;
+  /** Price in cents (0 if free shipping applies) */
+  price: number;
+  /** Original price in cents (always the base price before free shipping) */
+  originalPrice: number;
+  /** Free shipping threshold in cents, null = no free shipping available for this method */
+  freeShippingThreshold: number | null;
+  /** Carrier logo URL */
+  logo: string | null;
+  /** Provider type */
+  provider: "shipit" | "custom";
+  /** Carrier name (e.g., "Posti", "Matkahuolto") */
+  carrier: string | null;
+  /** Distance from customer's postal code in meters */
+  distance: number | null;
+  /** Structured opening hours */
+  openingHours: OpeningHours | null;
+  /** GPS coordinates */
+  coordinates: { lat: number; lng: number } | null;
+}
+
+// =============================================================================
+// API Response
 // =============================================================================
 
 /**
  * Response from GET /shipment-methods/[postalCode]
+ *
+ * Returns unified shipping options regardless of provider.
+ * Pickup points are sorted by distance, home delivery by price.
  */
-export interface ShipmentMethodsWithLocationsResponse {
-  /** Home delivery methods (custom methods + Shipit home delivery) */
-  homeDeliveryMethods: ShipmentMethod[];
-  /** Pickup locations with shipmentMethodId and price attached */
-  pickupLocations: PickupLocation[];
+export interface ShipmentMethodsResponse {
+  /** Home delivery options (sorted by price) */
+  homeDelivery: HomeDeliveryOption[];
+  /** Pickup point options (sorted by distance) */
+  pickupPoints: PickupPointOption[];
 }
+
