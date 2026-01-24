@@ -37,6 +37,14 @@ export interface CartResponse {
 }
 
 /**
+ * Reason why a discount code was removed during validation
+ */
+export type DiscountRemovalReason =
+  | "CAMPAIGN_ACTIVE"
+  | "MIN_ORDER_NOT_MET"
+  | "CODE_INVALID";
+
+/**
  * Changes detected during cart validation
  */
 export interface CartValidationChanges {
@@ -46,10 +54,17 @@ export interface CartValidationChanges {
   quantityAdjusted: number;
   /** Number of items with changed price */
   priceChanged: number;
+  /** Whether discount code was removed */
+  discountCouponRemoved: boolean;
+  /** Reason why discount was removed (only present if discountCouponRemoved is true) */
+  discountRemovalReason?: DiscountRemovalReason;
 }
 
 /**
  * Response from GET /cart/validate
+ *
+ * Returns validated cart items and change metadata.
+ * No totals or discount data - those are calculated client-side or fetched separately.
  */
 export interface CartValidationResponse {
   /** Validated cart items (with auto-fixed quantities/prices) */

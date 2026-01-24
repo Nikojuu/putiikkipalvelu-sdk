@@ -53,6 +53,7 @@ export type {
   CartResponse,
   CartValidationResponse,
   CartValidationChanges,
+  DiscountRemovalReason,
   CartSessionOptions,
   AddToCartParams,
   UpdateCartQuantityParams,
@@ -61,6 +62,16 @@ export type {
   PriceInfo,
   CalculatedCartItem,
   CartCalculationResult,
+  // Discount Codes
+  DiscountType,
+  AppliedDiscount,
+  ApplyDiscountParams,
+  ApplyDiscountResponse,
+  GetDiscountParams,
+  GetDiscountResponse,
+  RemoveDiscountParams,
+  RemoveDiscountResponse,
+  DiscountCodeError,
   // Customer
   Customer,
   RegisterData,
@@ -120,6 +131,19 @@ export { isSaleActive, getPriceInfo } from "./utils/pricing.js";
 
 // Cart calculation utilities
 export { calculateCartWithCampaigns } from "./utils/cart-calculations.js";
+
+// Discount utilities
+export {
+  formatDiscountValue,
+  calculateDiscountAmount,
+  getDiscountRemovalMessage,
+  getDiscountApplyErrorMessage,
+} from "./utils/discount.js";
+export type {
+  FormatDiscountOptions,
+  DiscountMessageLocale,
+  DiscountApplyErrorCode,
+} from "./utils/discount.js";
 
 // Error classes
 export {

@@ -26,6 +26,10 @@ import {
   createCheckoutResource,
   type CheckoutResource,
 } from "./resources/checkout.js";
+import {
+  createDiscountCodeResource,
+  type DiscountCodeResource,
+} from "./resources/discount-code.js";
 
 /**
  * The Storefront API client
@@ -75,6 +79,11 @@ export interface StorefrontClient {
    * Checkout resource for payment processing
    */
   readonly checkout: CheckoutResource;
+
+  /**
+   * Discount code resource for applying/removing discount codes
+   */
+  readonly discountCode: DiscountCodeResource;
 }
 
 /**
@@ -108,5 +117,6 @@ export function createStorefrontClient(config: StorefrontClientConfig): Storefro
     customer: createCustomerResource(fetcher),
     order: createOrderResource(fetcher),
     checkout: createCheckoutResource(fetcher),
+    discountCode: createDiscountCodeResource(fetcher),
   };
 }

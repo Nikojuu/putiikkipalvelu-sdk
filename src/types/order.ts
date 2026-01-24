@@ -137,7 +137,7 @@ export interface Order {
   storeId: string;
   /** Order creation timestamp */
   createdAt: string;
-  /** Total order amount in cents */
+  /** Total order amount in cents (subtotal before discount) */
   totalAmount: number;
   /** Current order status */
   status: OrderStatus;
@@ -149,4 +149,10 @@ export interface Order {
   orderCustomerData: ConfirmationOrderCustomerData | null;
   /** Shipment method with tracking info */
   orderShipmentMethod: ConfirmationOrderShipmentMethod | null;
+  /** Discount code string (e.g., "SUMMER20") - null if no discount applied */
+  discountCodeValue: string | null;
+  /** Discount amount in cents - null if no discount applied */
+  discountAmount: number | null;
+  /** VAT rate used for the discount calculation */
+  discountVatRate: number | null;
 }

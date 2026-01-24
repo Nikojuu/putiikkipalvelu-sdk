@@ -13,8 +13,11 @@ import type {
   AddToCartParams,
   UpdateCartQuantityParams,
   RemoveFromCartParams,
+  CartItem,
+  Campaign,
 } from "../types/index.js";
 import type { Fetcher } from "../utils/fetch.js";
+import { calculateCartWithCampaigns } from "../utils/cart-calculations.js";
 
 /**
  * Build headers object for cart operations
@@ -200,36 +203,59 @@ export function createCartResource(fetcher: Fetcher) {
      * Checks product availability, stock levels, and prices.
      * Auto-fixes issues (removes unavailable items, adjusts quantities).
      *
+     * Campaign conflict detection:
+     * - SDK calculates if BuyXPayY campaigns apply using calculateCartWithCampaigns()
+     * - Sends x-campaigns-apply header to backend
+     * - If campaigns apply AND discount code exists, backend removes it
+     * - Returns changes.discountCouponRemoved = true
+     *
      * @param options - Cart session options
+     * @param cartItems - Current cart items for campaign calculation
+     * @param campaigns - Active campaigns for conflict check
      * @param fetchOptions - Fetch options
      * @returns Validated cart with change metadata
      *
      * @example Validate before checkout
      * ```typescript
-     * const { items, hasChanges, changes } = await client.cart.validate({ cartId });
+     * const result = await client.cart.validate(
+     *   { cartId },
+     *   cartItems,
+     *   storeConfig.campaigns
+     * );
      *
-     * if (hasChanges) {
-     *   if (changes.removedItems > 0) {
-     *     notify('Some items were removed (out of stock)');
+     * if (result.hasChanges) {
+     *   if (result.changes.discountCouponRemoved) {
+     *     notify("Alennuskoodi poistettu - kampanja-alennus aktivoitui");
      *   }
-     *   if (changes.quantityAdjusted > 0) {
-     *     notify('Some quantities were adjusted');
-     *   }
-     *   if (changes.priceChanged > 0) {
-     *     notify('Some prices have changed');
-     *   }
+     *   // Handle other changes...
      * }
      * ```
      */
     async validate(
       options?: CartSessionOptions,
+      cartItems?: CartItem[],
+      campaigns?: Campaign[],
       fetchOptions?: FetchOptions
     ): Promise<CartValidationResponse> {
+      // Calculate if campaigns apply to current cart (client-side, instant)
+      let campaignsApply = false;
+
+      if (cartItems && campaigns && cartItems.length > 0) {
+        const campaignResult = calculateCartWithCampaigns(cartItems, campaigns);
+        campaignsApply = campaignResult.totalSavings > 0;
+      }
+
+      // Build headers with campaign info
+      const headers = {
+        ...buildCartHeaders(options),
+        "x-campaigns-apply": campaignsApply ? "true" : "false",
+      };
+
       return fetcher.request<CartValidationResponse>(
         "/api/storefront/v1/cart/validate",
         {
           method: "GET",
-          headers: buildCartHeaders(options),
+          headers,
           ...fetchOptions,
         }
       );

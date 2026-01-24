@@ -46,6 +46,8 @@ export interface GetShippingOptionsParams extends FetchOptions {
   cartItems?: CartItem[];
   /** Active campaigns - used to calculate cart total with discounts for free shipping */
   campaigns?: Campaign[];
+  /** Discount amount in cents (from discount code) - subtracted from cart total for free shipping threshold */
+  discountAmount?: number;
   /** Country code (default: "FI") */
   country?: string;
 }
@@ -112,11 +114,17 @@ export function createShippingResource(fetcher: Fetcher) {
         params.set("cartWeight", cartWeight.toString());
 
         // Send cart total for free shipping calculation
-        // Use calculateCartWithCampaigns if campaigns provided (accounts for discounts)
+        // Use calculateCartWithCampaigns if campaigns provided (accounts for campaign discounts)
         const cartTotal = options.campaigns
           ? calculateCartWithCampaigns(options.cartItems, options.campaigns).cartTotal
           : calculateCartTotal(options.cartItems);
-        params.set("cartTotal", cartTotal.toString());
+
+        // Subtract discount code amount if provided (ensures free shipping threshold uses total after discount)
+        const finalCartTotal = options.discountAmount
+          ? Math.max(0, cartTotal - options.discountAmount)
+          : cartTotal;
+
+        params.set("cartTotal", finalCartTotal.toString());
       }
 
       if (options?.country) {
