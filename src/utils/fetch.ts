@@ -1,10 +1,7 @@
 import type { FetchOptions } from "../types/index.js";
 import {
   StorefrontError,
-  AuthError,
   RateLimitError,
-  NotFoundError,
-  ValidationError,
   VerificationRequiredError,
 } from "./errors.js";
 
@@ -122,6 +119,7 @@ export function createFetcher(config: FetcherConfig) {
  */
 interface ErrorResponseJson {
   error?: string;
+  code?: string;
   requiresVerification?: boolean;
   customerId?: string;
 }
@@ -148,22 +146,30 @@ async function handleErrorResponse(response: Response): Promise<never> {
     throw new VerificationRequiredError(message, errorData.customerId);
   }
 
+  // Use API-provided code if available, otherwise use default for status
+  const code = errorData.code;
+
   switch (response.status) {
     case 401:
-      throw new AuthError(message);
+      throw new StorefrontError(message, 401, code || "UNAUTHORIZED");
 
     case 404:
-      throw new NotFoundError(message);
+      throw new StorefrontError(message, 404, code || "NOT_FOUND");
 
     case 429: {
       const retryAfter = response.headers.get("Retry-After");
-      throw new RateLimitError(message, retryAfter ? parseInt(retryAfter, 10) : null);
+      const error = new RateLimitError(message, retryAfter ? parseInt(retryAfter, 10) : null);
+      if (code) {
+        // Override code if API provided one
+        (error as { code: string }).code = code;
+      }
+      throw error;
     }
 
     case 400:
-      throw new ValidationError(message);
+      throw new StorefrontError(message, 400, code || "VALIDATION_ERROR");
 
     default:
-      throw new StorefrontError(message, response.status, "API_ERROR");
+      throw new StorefrontError(message, response.status, code || "API_ERROR");
   }
 }
