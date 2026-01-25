@@ -111,5 +111,9 @@ export interface ShipmentMethodsResponse {
   homeDelivery: HomeDeliveryOption[];
   /** Pickup point options (sorted by distance) */
   pickupPoints: PickupPointOption[];
+  /** Lowest free shipping threshold across ALL applicable methods.
+   *  Use this for "Add €X for free shipping" messages to show the easiest path to free shipping.
+   *  null if no methods have free shipping thresholds configured. */
+  lowestFreeShippingThreshold: number | null;
 }
 
