@@ -19,6 +19,10 @@ export interface Category {
   name: string;
   /** URL-friendly slug */
   slug: string;
+  /** SEO meta title for search engines (max 60 chars) */
+  metaTitle: string | null;
+  /** SEO meta description for search engines (max 160 chars) */
+  metaDescription: string | null;
   /** Store ID this category belongs to */
   storeId: string;
   /** Parent category ID (null if root category) */
