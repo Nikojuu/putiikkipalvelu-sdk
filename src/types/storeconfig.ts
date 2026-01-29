@@ -64,16 +64,32 @@ export interface StoreSeo {
   domain: string | null;
   /** Open Graph image URL */
   openGraphImageUrl: string | null;
+  /** Alt text for Open Graph image */
+  ogImageAlt: string | null;
   /** Twitter card image URL */
   twitterImageUrl: string | null;
+  /** Twitter handle (e.g., @storename) */
+  twitterHandle: string | null;
   /** Instagram profile URL */
   instagramUrl: string | null;
   /** Facebook page URL */
   facebookUrl: string | null;
+  /** TikTok profile URL */
+  tiktokUrl: string | null;
+  /** YouTube channel URL */
+  youtubeUrl: string | null;
+  /** Pinterest profile URL */
+  pinterestUrl: string | null;
+  /** LinkedIn page URL */
+  linkedinUrl: string | null;
   /** Price range indicator (e.g., "€€") */
   priceRange: string | null;
   /** Business type description */
   businessType: string | null;
+  /** Business founding date (ISO 8601) */
+  foundingDate: string | null;
+  /** Google Search Console verification code */
+  googleVerificationCode: string | null;
 }
 
 /**
