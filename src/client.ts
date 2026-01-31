@@ -30,6 +30,10 @@ import {
   createDiscountCodeResource,
   type DiscountCodeResource,
 } from "./resources/discount-code.js";
+import {
+  createPagesResource,
+  type PagesResource,
+} from "./resources/pages.js";
 
 /**
  * The Storefront API client
@@ -84,6 +88,11 @@ export interface StorefrontClient {
    * Discount code resource for applying/removing discount codes
    */
   readonly discountCode: DiscountCodeResource;
+
+  /**
+   * Pages resource for fetching CMS pages
+   */
+  readonly pages: PagesResource;
 }
 
 /**
@@ -118,5 +127,6 @@ export function createStorefrontClient(config: StorefrontClientConfig): Storefro
     order: createOrderResource(fetcher),
     checkout: createCheckoutResource(fetcher),
     discountCode: createDiscountCodeResource(fetcher),
+    pages: createPagesResource(fetcher),
   };
 }

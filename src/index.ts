@@ -111,6 +111,17 @@ export type {
   ConfirmationOrderCustomerData,
   ConfirmationOrderShipmentMethod,
   ConfirmationItemType,
+  // Pages
+  StorePage,
+  PageBlock,
+  MarkdownBlock,
+  AccordionBlock,
+  AccordionItem,
+  GalleryBlock,
+  GalleryItem,
+  AboutBlock,
+  ShowcaseBlock,
+  ShowcaseItem,
   // Checkout
   CheckoutCustomerData,
   CheckoutShipmentMethod,
