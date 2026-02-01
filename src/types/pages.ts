@@ -6,6 +6,16 @@
 /**
  * A published CMS page with typed content blocks.
  */
+export interface PageSeo {
+  seoTitle: string | null;
+  seoDescription: string | null;
+  domain: string | null;
+  openGraphImageUrl: string | null;
+  ogImageAlt: string | null;
+  twitterImageUrl: string | null;
+  twitterHandle: string | null;
+}
+
 export interface StorePage {
   id: string;
   slug: string;
@@ -13,6 +23,8 @@ export interface StorePage {
   description: string | null;
   blocks: PageBlock[];
   updatedAt: string;
+  storeName: string;
+  seo: PageSeo | null;
 }
 
 // =============================================================================
@@ -54,7 +66,6 @@ export interface AccordionItem {
 export interface GalleryBlock extends BaseBlock {
   type: "gallery";
   data: {
-    title?: string;
     items: GalleryItem[];
   };
 }
@@ -79,6 +90,8 @@ export interface AboutBlock extends BaseBlock {
 export interface ShowcaseBlock extends BaseBlock {
   type: "showcase";
   data: {
+    title?: string;
+    description?: string;
     items: ShowcaseItem[];
   };
 }
@@ -90,6 +103,38 @@ export interface ShowcaseItem {
   categorySlug: string;
 }
 
+export interface HeroBlock extends BaseBlock {
+  type: "hero";
+  data: {
+    title: string;
+    subtitle?: string;
+    imageUrl?: string;
+    ctaText?: string;
+    ctaLink?: string;
+  };
+}
+
+export interface LatestProductsBlock extends BaseBlock {
+  type: "latest_products";
+  data: {
+    title?: string;
+    description?: string;
+    count: number;
+  };
+}
+
+export interface CtaBlock extends BaseBlock {
+  type: "cta";
+  data: {
+    title?: string;
+    description?: string;
+    primaryButtonText?: string;
+    primaryButtonLink?: string;
+    secondaryButtonText?: string;
+    secondaryButtonLink?: string;
+  };
+}
+
 // =============================================================================
 // Discriminated union of all block types
 // =============================================================================
@@ -99,4 +144,7 @@ export type PageBlock =
   | AccordionBlock
   | GalleryBlock
   | AboutBlock
-  | ShowcaseBlock;
+  | ShowcaseBlock
+  | HeroBlock
+  | LatestProductsBlock
+  | CtaBlock;

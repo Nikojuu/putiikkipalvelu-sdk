@@ -21,6 +21,7 @@ export type {
   StoreSeo,
   PaymentConfig,
   FeatureFlags,
+  NavPage,
   // Products
   Product,
   ProductDetail,
@@ -113,6 +114,7 @@ export type {
   ConfirmationItemType,
   // Pages
   StorePage,
+  PageSeo,
   PageBlock,
   MarkdownBlock,
   AccordionBlock,

@@ -16,8 +16,19 @@ export interface StoreConfig {
   store: StoreInfo;
   seo: StoreSeo;
   payments: PaymentConfig;
+  navPages: NavPage[];
   campaigns: Campaign[];
   features: FeatureFlags;
+}
+
+/**
+ * A published CMS page exposed in navigation
+ */
+export interface NavPage {
+  /** URL-friendly slug */
+  slug: string;
+  /** Page display title */
+  title: string;
 }
 
 /**
