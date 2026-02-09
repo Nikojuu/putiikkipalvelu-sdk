@@ -15,7 +15,7 @@
 /**
  * Item type for order line items
  */
-export type ConfirmationItemType = "PRODUCT" | "VARIATION" | "SHIPPING";
+export type ConfirmationItemType = "PRODUCT" | "VARIATION" | "SHIPPING" | "TICKET";
 
 /**
  * A single line item in an order confirmation

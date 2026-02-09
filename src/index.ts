@@ -134,6 +134,17 @@ export type {
   PaytrailGroup,
   CheckoutErrorCode,
   CheckoutErrorDetails,
+  // Tickets
+  TicketStatus,
+  TicketEvent,
+  PurchasedTicket,
+  TicketEventsResponse,
+  TicketValidatePinResponse,
+  TicketGetResponse,
+  TicketUseResponse,
+  TicketHolderData,
+  // Product ticket info
+  ProductTicketInfo,
 } from "./types/index.js";
 
 // Checkout options (re-exported from resource for convenience)

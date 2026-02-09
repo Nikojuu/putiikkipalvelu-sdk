@@ -20,6 +20,8 @@ export interface CartItem {
   cartQuantity: number;
   /** Selected variation (if product has variations) */
   variation?: ProductVariation;
+  /** Whether this item is a ticket product (no shipping required) */
+  isTicket?: boolean;
 }
 
 // =============================================================================
@@ -71,6 +73,8 @@ export interface CartValidationResponse {
   items: CartItem[];
   /** Whether any changes were made during validation */
   hasChanges: boolean;
+  /** Whether the cart requires shipping (false for ticket-only carts) */
+  requiresShipping: boolean;
   /** Details about what changed */
   changes: CartValidationChanges;
 }

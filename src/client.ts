@@ -34,6 +34,10 @@ import {
   createPagesResource,
   type PagesResource,
 } from "./resources/pages.js";
+import {
+  createTicketsResource,
+  type TicketsResource,
+} from "./resources/tickets.js";
 
 /**
  * The Storefront API client
@@ -93,6 +97,11 @@ export interface StorefrontClient {
    * Pages resource for fetching CMS pages
    */
   readonly pages: PagesResource;
+
+  /**
+   * Tickets resource for ticket scanning and validation
+   */
+  readonly tickets: TicketsResource;
 }
 
 /**
@@ -128,5 +137,6 @@ export function createStorefrontClient(config: StorefrontClientConfig): Storefro
     checkout: createCheckoutResource(fetcher),
     discountCode: createDiscountCodeResource(fetcher),
     pages: createPagesResource(fetcher),
+    tickets: createTicketsResource(fetcher),
   };
 }

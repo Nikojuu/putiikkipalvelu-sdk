@@ -100,6 +100,18 @@ export interface Product {
  * Full product detail (single product page)
  * Used by: /product/{slug}
  */
+/**
+ * Ticket info attached to a ticket product
+ */
+export interface ProductTicketInfo {
+  /** Ticket info ID */
+  id: string;
+  /** Whether holder name is required per ticket at checkout */
+  requiresHolder: boolean;
+  /** Maximum uses per ticket (0 = unlimited) */
+  maxUses: number;
+}
+
 export interface ProductDetail extends Omit<Product, "variations"> {
   /** Product weight in kg (for shipping calculations) */
   weight: number;
@@ -113,6 +125,8 @@ export interface ProductDetail extends Omit<Product, "variations"> {
   categories: CategoryReference[];
   /** Full product variations */
   variations: ProductVariation[];
+  /** Ticket info (present if product is a ticket, null otherwise) */
+  ticketInfo: ProductTicketInfo | null;
 }
 
 // =============================================================================

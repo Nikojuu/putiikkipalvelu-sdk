@@ -54,6 +54,7 @@ export function createCheckoutResource(fetcher: Fetcher) {
       customerData: params.customerData,
       successUrl: params.successUrl,
       cancelUrl: params.cancelUrl,
+      ...(params.ticketHolders && { ticketHolders: params.ticketHolders }),
     };
   }
 

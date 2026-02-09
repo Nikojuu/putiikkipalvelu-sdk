@@ -16,6 +16,7 @@ export * from "./order.js";
 export * from "./checkout.js";
 export * from "./discount-code.js";
 export * from "./pages.js";
+export * from "./ticket.js";
 
 // =============================================================================
 // SDK Configuration

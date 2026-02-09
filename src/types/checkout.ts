@@ -41,6 +41,16 @@ export interface CheckoutShipmentMethod {
 }
 
 /**
+ * Ticket holder name for requiresHolder tickets
+ */
+export interface TicketHolderData {
+  /** Holder's first name */
+  firstName: string;
+  /** Holder's last name */
+  lastName: string;
+}
+
+/**
  * Parameters for creating a checkout session
  */
 export interface CheckoutParams {
@@ -54,6 +64,8 @@ export interface CheckoutParams {
   successUrl: string;
   /** URL to redirect on cancelled payment */
   cancelUrl: string;
+  /** Ticket holder names keyed by product ID, one entry per ticket quantity */
+  ticketHolders?: Record<string, TicketHolderData[]>;
 }
 
 // =============================================================================
