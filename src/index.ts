@@ -126,6 +126,8 @@ export type {
   ShowcaseItem,
   CarouselContentBlock,
   CarouselContentItem,
+  OpeningHoursBlock,
+  OpeningHoursEntry,
   // Checkout
   CheckoutCustomerData,
   CheckoutShipmentMethod,

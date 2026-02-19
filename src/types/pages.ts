@@ -153,6 +153,24 @@ export interface CarouselContentBlock extends BaseBlock {
 }
 
 // =============================================================================
+// Opening Hours Calendar block
+// =============================================================================
+
+export interface OpeningHoursEntry {
+  open: string;
+  close: string;
+  note?: string;
+}
+
+export interface OpeningHoursBlock extends BaseBlock {
+  type: "opening_hours";
+  data: {
+    title?: string;
+    days: Record<string, OpeningHoursEntry>;
+  };
+}
+
+// =============================================================================
 // Discriminated union of all block types
 // =============================================================================
 
@@ -165,4 +183,5 @@ export type PageBlock =
   | HeroBlock
   | LatestProductsBlock
   | CtaBlock
-  | CarouselContentBlock;
+  | CarouselContentBlock
+  | OpeningHoursBlock;
