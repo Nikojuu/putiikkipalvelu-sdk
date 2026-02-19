@@ -34,6 +34,7 @@ export interface StorePage {
 interface BaseBlock {
   id: string;
   order: number;
+  hidden?: boolean;
 }
 
 // =============================================================================
@@ -135,6 +136,22 @@ export interface CtaBlock extends BaseBlock {
   };
 }
 
+export interface CarouselContentItem {
+  id: string;
+  src: string;
+  alt?: string;
+  order: number;
+}
+
+export interface CarouselContentBlock extends BaseBlock {
+  type: "carousel_content";
+  data: {
+    content: string;
+    items: CarouselContentItem[];
+    contentPosition: "left" | "right";
+  };
+}
+
 // =============================================================================
 // Discriminated union of all block types
 // =============================================================================
@@ -147,4 +164,5 @@ export type PageBlock =
   | ShowcaseBlock
   | HeroBlock
   | LatestProductsBlock
-  | CtaBlock;
+  | CtaBlock
+  | CarouselContentBlock;

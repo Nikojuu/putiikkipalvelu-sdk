@@ -124,6 +124,8 @@ export type {
   AboutBlock,
   ShowcaseBlock,
   ShowcaseItem,
+  CarouselContentBlock,
+  CarouselContentItem,
   // Checkout
   CheckoutCustomerData,
   CheckoutShipmentMethod,
