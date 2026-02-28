@@ -171,6 +171,46 @@ export interface OpeningHoursBlock extends BaseBlock {
 }
 
 // =============================================================================
+// Image Grid block
+// =============================================================================
+
+export interface ImageGridItem {
+  id: string;
+  imageUrl: string;
+  content: string;
+  order: number;
+}
+
+export interface ImageGridBlock extends BaseBlock {
+  type: "image_grid";
+  data: {
+    title?: string;
+    columns: 2 | 3 | 4;
+    items: ImageGridItem[];
+  };
+}
+
+// =============================================================================
+// Text Grid block
+// =============================================================================
+
+export interface TextGridItem {
+  id: string;
+  content: string;
+  order: number;
+}
+
+export interface TextGridBlock extends BaseBlock {
+  type: "text_grid";
+  data: {
+    title?: string;
+    description?: string;
+    columns: 2 | 3 | 4 | 5 | 6;
+    items: TextGridItem[];
+  };
+}
+
+// =============================================================================
 // Discriminated union of all block types
 // =============================================================================
 
@@ -184,4 +224,6 @@ export type PageBlock =
   | LatestProductsBlock
   | CtaBlock
   | CarouselContentBlock
-  | OpeningHoursBlock;
+  | OpeningHoursBlock
+  | ImageGridBlock
+  | TextGridBlock;

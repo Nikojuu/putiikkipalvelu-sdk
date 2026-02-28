@@ -128,6 +128,10 @@ export type {
   CarouselContentItem,
   OpeningHoursBlock,
   OpeningHoursEntry,
+  ImageGridBlock,
+  ImageGridItem,
+  TextGridBlock,
+  TextGridItem,
   // Checkout
   CheckoutCustomerData,
   CheckoutShipmentMethod,
