@@ -19,6 +19,17 @@ export interface StoreConfig {
   navPages: NavPage[];
   campaigns: Campaign[];
   features: FeatureFlags;
+  analytics: AnalyticsConfig;
+}
+
+/**
+ * Analytics configuration for the storefront
+ */
+export interface AnalyticsConfig {
+  /** Umami website UUID for tracking */
+  umamiWebsiteId: string | null;
+  /** URL to the Umami tracking script */
+  umamiScriptUrl: string | null;
 }
 
 /**

@@ -22,6 +22,7 @@ export type {
   PaymentConfig,
   FeatureFlags,
   NavPage,
+  AnalyticsConfig,
   // Products
   Product,
   ProductDetail,
