@@ -67,7 +67,7 @@ export interface ProductVariation extends ProductVariationListing {
 
 /**
  * Product for listing (cards, grids)
- * Used by: /latest-products, /sorted-products, /filtered-products
+ * Used by: /latest-products, /sorted-products
  */
 export interface Product {
   /** Unique product identifier */
@@ -134,7 +134,7 @@ export interface ProductDetail extends Omit<Product, "variations"> {
 // =============================================================================
 
 /**
- * Response from /sorted-products and /filtered-products
+ * Response from /sorted-products
  */
 export interface ProductListResponse {
   /** Category/collection name */
@@ -168,7 +168,7 @@ export type ProductSortOption =
   | "relevance";
 
 /**
- * Parameters for sorted/filtered products
+ * Parameters for sorted products
  */
 export interface ProductListParams {
   /** Category slugs to filter by (omit for all products) */

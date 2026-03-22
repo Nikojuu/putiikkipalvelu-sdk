@@ -240,34 +240,4 @@ describe("products resource", () => {
     });
   });
 
-  describe("filtered", () => {
-    it("should fetch filtered products", async () => {
-      const mockResponse = {
-        name: "All Products",
-        products: [{ id: "1", name: "Product 1" }],
-      };
-      mockFetch.mockResolvedValueOnce(
-        createMockResponse({
-          json: async () => mockResponse,
-        })
-      );
-
-      const result = await client.products.filtered({
-        slugs: ["all-products"],
-        page: 1,
-        pageSize: 1000,
-      });
-
-      expect(result).toEqual(mockResponse);
-      expect(mockFetch).toHaveBeenCalledWith(
-        expect.stringContaining("/filtered-products"),
-        expect.any(Object)
-      );
-
-      const calledUrl = mockFetch.mock.calls[0][0] as string;
-      expect(calledUrl).toContain("page=1");
-      expect(calledUrl).toContain("pageSize=1000");
-      expect(calledUrl).toContain("slugs=all-products");
-    });
-  });
 });

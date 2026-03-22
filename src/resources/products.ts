@@ -163,46 +163,6 @@ export function createProductsResource(fetcher: Fetcher) {
       });
     },
 
-    /**
-     * Get filtered products with pagination.
-     * Similar to sorted() but without totalCount in response.
-     * Useful for sitemaps and bulk fetches.
-     *
-     * @param params - Query parameters (slugs, page, pageSize, sort)
-     * @param options - Fetch options (caching, headers, etc.)
-     * @returns Products list with category name
-     *
-     * @example Fetch all products for sitemap
-     * ```typescript
-     * const { products } = await client.products.filtered({
-     *   slugs: ['all-products'],
-     *   page: 1,
-     *   pageSize: 1000
-     * });
-     * ```
-     */
-    async filtered(
-      params: ProductListParams = {},
-      options?: FetchOptions
-    ): Promise<Omit<ProductListResponse, "totalCount">> {
-      const searchParams = new URLSearchParams();
-      if (params.page) searchParams.set("page", params.page.toString());
-      if (params.pageSize)
-        searchParams.set("pageSize", params.pageSize.toString());
-      if (params.sort) searchParams.set("sort", params.sort);
-      if (params.slugs?.length) {
-        params.slugs.forEach((s) => searchParams.append("slugs", s));
-      }
-      const query = searchParams.toString();
-      const endpoint = `/api/storefront/v1/filtered-products${query ? `?${query}` : ""}`;
-
-      return fetcher.request<Omit<ProductListResponse, "totalCount">>(
-        endpoint,
-        {
-          ...options,
-        }
-      );
-    },
   };
 }
 
