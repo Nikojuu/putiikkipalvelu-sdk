@@ -154,6 +154,7 @@ export function createProductsResource(fetcher: Fetcher) {
       if (params.slugs?.length) {
         params.slugs.forEach((s) => searchParams.append("slugs", s));
       }
+      if (params.query) searchParams.set("q", params.query);
       const query = searchParams.toString();
       const endpoint = `/api/storefront/v1/sorted-products${query ? `?${query}` : ""}`;
 

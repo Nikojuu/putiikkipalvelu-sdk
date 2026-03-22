@@ -164,7 +164,8 @@ export type ProductSortOption =
   | "newest"
   | "price_asc"
   | "price_desc"
-  | "popularity";
+  | "popularity"
+  | "relevance";
 
 /**
  * Parameters for sorted/filtered products
@@ -178,4 +179,6 @@ export interface ProductListParams {
   pageSize?: number;
   /** Sort order */
   sort?: ProductSortOption;
+  /** Full-text search query */
+  query?: string;
 }
