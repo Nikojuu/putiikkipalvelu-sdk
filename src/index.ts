@@ -18,6 +18,7 @@ export type {
   // Store
   StoreConfig,
   StoreInfo,
+  ImageAspectRatio,
   StoreSeo,
   PaymentConfig,
   FeatureFlags,

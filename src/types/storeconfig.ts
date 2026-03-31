@@ -42,6 +42,9 @@ export interface NavPage {
   title: string;
 }
 
+/** Image aspect ratio setting for the store's product images */
+export type ImageAspectRatio = "SQUARE" | "PORTRAIT";
+
 /**
  * Store business information
  */
@@ -72,6 +75,8 @@ export interface StoreInfo {
   businessId: string;
   /** Store logo URL */
   logoUrl: string | null;
+  /** Product image aspect ratio: SQUARE (1:1) or PORTRAIT (3:4) */
+  imageAspectRatio: ImageAspectRatio;
 }
 
 /**
