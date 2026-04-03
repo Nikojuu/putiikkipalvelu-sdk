@@ -35,6 +35,8 @@ interface BaseBlock {
   id: string;
   order: number;
   hidden?: boolean;
+  /** Technical identifier for targeting this block from the storefront template */
+  key?: string;
 }
 
 // =============================================================================
