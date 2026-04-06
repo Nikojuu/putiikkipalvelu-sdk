@@ -134,6 +134,7 @@ export type {
   ImageGridItem,
   TextGridBlock,
   TextGridItem,
+  TableBlock,
   // Checkout
   CheckoutCustomerData,
   CheckoutShipmentMethod,

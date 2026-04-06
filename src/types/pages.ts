@@ -213,6 +213,20 @@ export interface TextGridBlock extends BaseBlock {
 }
 
 // =============================================================================
+// Table block
+// =============================================================================
+
+export interface TableBlock extends BaseBlock {
+  type: "table";
+  data: {
+    title?: string;
+    description?: string;
+    headers: string[];
+    rows: string[][];
+  };
+}
+
+// =============================================================================
 // Discriminated union of all block types
 // =============================================================================
 
@@ -228,4 +242,5 @@ export type PageBlock =
   | CarouselContentBlock
   | OpeningHoursBlock
   | ImageGridBlock
-  | TextGridBlock;
+  | TextGridBlock
+  | TableBlock;
