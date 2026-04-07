@@ -30,6 +30,8 @@ export interface AnalyticsConfig {
   umamiWebsiteId: string | null;
   /** URL to the Umami tracking script */
   umamiScriptUrl: string | null;
+  /** Google Tag Manager container ID (e.g. "GTM-XXXXXXX") */
+  gtmContainerId: string | null;
 }
 
 /**
