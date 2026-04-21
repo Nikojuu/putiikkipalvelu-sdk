@@ -110,6 +110,10 @@ export interface ProductTicketInfo {
   requiresHolder: boolean;
   /** Maximum uses per ticket (0 = unlimited) */
   maxUses: number;
+  /** Ticket sales start (ISO 8601), null = sales open immediately */
+  salesStart: string | null;
+  /** Ticket sales end (ISO 8601), null = sales never end */
+  salesEnd: string | null;
 }
 
 export interface ProductDetail extends Omit<Product, "variations"> {

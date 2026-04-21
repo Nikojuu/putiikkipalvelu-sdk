@@ -56,6 +56,8 @@ export interface CartValidationChanges {
   quantityAdjusted: number;
   /** Number of items with changed price */
   priceChanged: number;
+  /** Number of ticket items removed because sales window is not open or has ended */
+  ticketSalesWindowRemoved: number;
   /** Whether discount code was removed */
   discountCouponRemoved: boolean;
   /** Reason why discount was removed (only present if discountCouponRemoved is true) */

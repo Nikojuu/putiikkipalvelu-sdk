@@ -45,3 +45,9 @@ npx vitest run tests/client.test.ts
 - All API methods accept `FetchOptions` for framework-specific options (Next.js `next: { revalidate }`, etc.)
 - Fetcher spreads unknown options to fetch for framework compatibility
 - Types kept in sync with API - update `src/types/` when API changes
+
+### CMS Block Types
+
+The pages endpoint (`/pages/[slug]`) returns `StorePage` with a JSON `blocks` array. Each block has a `type` field:
+
+`markdown`, `accordion`, `gallery`, `about`, `showcase`, `hero`, `latest_products`, `cta`, `carousel_content`, `opening_hours`, `image_grid`, `text_grid`, `table`
