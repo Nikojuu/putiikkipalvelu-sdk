@@ -92,6 +92,8 @@ export interface Product {
   saleStartDate: string | null;
   /** Sale end date (ISO 8601), null = no end */
   saleEndDate: string | null;
+  /** True if this product is delivered as a digital download (no shipping) */
+  isDigital?: boolean;
   /** Product variations (minimal fields for listing) */
   variations: ProductVariationListing[];
 }
@@ -131,6 +133,11 @@ export interface ProductDetail extends Omit<Product, "variations"> {
   variations: ProductVariation[];
   /** Ticket info (present if product is a ticket, null otherwise) */
   ticketInfo: ProductTicketInfo | null;
+  /**
+   * HTML instructions shown to the buyer after a digital purchase.
+   * Only populated when isDigital=true; null otherwise.
+   */
+  digitalContent?: string | null;
 }
 
 // =============================================================================

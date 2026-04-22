@@ -90,7 +90,7 @@ describe("customer resource", () => {
       expect(result.customer.email).toBe("john@example.com");
       expect(result.customer.createdAt).toBe("2024-01-15T10:00:00.000Z");
       expect(mockFetch).toHaveBeenCalledWith(
-        expect.stringContaining("/customer/(auth)/register"),
+        expect.stringContaining("/customer/register"),
         expect.objectContaining({
           method: "POST",
           body: expect.stringContaining("john@example.com"),
@@ -169,7 +169,7 @@ describe("customer resource", () => {
       expect(result.sessionId).toBe("session_xyz789");
       expect(result.customer.email).toBe("john@example.com");
       expect(mockFetch).toHaveBeenCalledWith(
-        expect.stringContaining("/customer/(auth)/login"),
+        expect.stringContaining("/customer/login"),
         expect.objectContaining({
           method: "POST",
           body: expect.stringContaining("john@example.com"),
@@ -258,7 +258,7 @@ describe("customer resource", () => {
       expect(result.success).toBe(true);
       expect(result.cartId).toBe("new_guest_cart_def");
       expect(mockFetch).toHaveBeenCalledWith(
-        expect.stringContaining("/customer/(auth)/logout"),
+        expect.stringContaining("/customer/logout"),
         expect.objectContaining({
           method: "POST",
           headers: expect.objectContaining({
@@ -317,7 +317,7 @@ describe("customer resource", () => {
       expect(result.success).toBe(true);
       expect(result.customer).toEqual(mockCustomer);
       expect(mockFetch).toHaveBeenCalledWith(
-        expect.stringContaining("/customer/(auth)/get-user"),
+        expect.stringContaining("/customer/get-user"),
         expect.objectContaining({
           method: "GET",
           headers: expect.objectContaining({
@@ -373,7 +373,7 @@ describe("customer resource", () => {
       expect(result.success).toBe(true);
       expect(result.message).toContain("verified successfully");
       expect(mockFetch).toHaveBeenCalledWith(
-        expect.stringContaining("/customer/(auth)/verify-email"),
+        expect.stringContaining("/customer/verify-email"),
         expect.objectContaining({
           method: "GET",
         })
@@ -430,7 +430,7 @@ describe("customer resource", () => {
       expect(result.success).toBe(true);
       expect(result.message).toBe("Verification email sent.");
       expect(mockFetch).toHaveBeenCalledWith(
-        expect.stringContaining("/customer/(auth)/resend-verification"),
+        expect.stringContaining("/customer/resend-verification"),
         expect.objectContaining({
           method: "POST",
           body: expect.stringContaining("cust_123"),
@@ -511,7 +511,7 @@ describe("customer resource", () => {
       // Token is never exposed in response - email is sent server-side
       expect("passwordResetToken" in result).toBe(false);
       expect(mockFetch).toHaveBeenCalledWith(
-        expect.stringContaining("/customer/(auth)/forgot-password"),
+        expect.stringContaining("/customer/forgot-password"),
         expect.objectContaining({
           method: "POST",
           body: expect.stringContaining("john@example.com"),
@@ -596,7 +596,7 @@ describe("customer resource", () => {
       expect(result.success).toBe(true);
       expect(result.message).toContain("Password reset successful");
       expect(mockFetch).toHaveBeenCalledWith(
-        expect.stringContaining("/customer/(auth)/reset-password"),
+        expect.stringContaining("/customer/reset-password"),
         expect.objectContaining({
           method: "POST",
           body: expect.stringContaining("valid_reset_token_123"),

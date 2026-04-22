@@ -66,7 +66,7 @@ export function createCustomerResource(fetcher: Fetcher) {
       fetchOptions?: FetchOptions
     ): Promise<RegisterResponse> {
       return fetcher.request<RegisterResponse>(
-        "/api/storefront/v1/customer/(auth)/register",
+        "/api/storefront/v1/customer/register",
         {
           method: "POST",
           body: data,
@@ -120,7 +120,7 @@ export function createCustomerResource(fetcher: Fetcher) {
       }
 
       return fetcher.request<LoginResponse>(
-        "/api/storefront/v1/customer/(auth)/login",
+        "/api/storefront/v1/customer/login",
         {
           method: "POST",
           body: { email, password },
@@ -156,7 +156,7 @@ export function createCustomerResource(fetcher: Fetcher) {
       fetchOptions?: FetchOptions
     ): Promise<LogoutResponse> {
       return fetcher.request<LogoutResponse>(
-        "/api/storefront/v1/customer/(auth)/logout",
+        "/api/storefront/v1/customer/logout",
         {
           method: "POST",
           headers: buildSessionHeaders(sessionId),
@@ -187,7 +187,7 @@ export function createCustomerResource(fetcher: Fetcher) {
       fetchOptions?: FetchOptions
     ): Promise<GetUserResponse> {
       return fetcher.request<GetUserResponse>(
-        "/api/storefront/v1/customer/(auth)/get-user",
+        "/api/storefront/v1/customer/get-user",
         {
           method: "GET",
           headers: buildSessionHeaders(sessionId),
@@ -218,7 +218,7 @@ export function createCustomerResource(fetcher: Fetcher) {
       fetchOptions?: FetchOptions
     ): Promise<VerifyEmailResponse> {
       return fetcher.request<VerifyEmailResponse>(
-        "/api/storefront/v1/customer/(auth)/verify-email",
+        "/api/storefront/v1/customer/verify-email",
         {
           method: "GET",
           params: { token },
@@ -250,7 +250,7 @@ export function createCustomerResource(fetcher: Fetcher) {
       fetchOptions?: FetchOptions
     ): Promise<ResendVerificationResponse> {
       return fetcher.request<ResendVerificationResponse>(
-        "/api/storefront/v1/customer/(auth)/resend-verification",
+        "/api/storefront/v1/customer/resend-verification",
         {
           method: "POST",
           body: { customerId },
@@ -285,7 +285,7 @@ export function createCustomerResource(fetcher: Fetcher) {
       fetchOptions?: FetchOptions
     ): Promise<ForgotPasswordResponse> {
       return fetcher.request<ForgotPasswordResponse>(
-        "/api/storefront/v1/customer/(auth)/forgot-password",
+        "/api/storefront/v1/customer/forgot-password",
         {
           method: "POST",
           body: { email },
@@ -330,7 +330,7 @@ export function createCustomerResource(fetcher: Fetcher) {
       fetchOptions?: FetchOptions
     ): Promise<ResetPasswordResponse> {
       return fetcher.request<ResetPasswordResponse>(
-        "/api/storefront/v1/customer/(auth)/reset-password",
+        "/api/storefront/v1/customer/reset-password",
         {
           method: "POST",
           body: { token, password },

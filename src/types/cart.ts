@@ -22,6 +22,8 @@ export interface CartItem {
   variation?: ProductVariation;
   /** Whether this item is a ticket product (no shipping required) */
   isTicket?: boolean;
+  /** Whether this item is a digital product (no shipping required) */
+  isDigital?: boolean;
 }
 
 // =============================================================================

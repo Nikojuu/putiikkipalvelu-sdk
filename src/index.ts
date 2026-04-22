@@ -156,6 +156,12 @@ export type {
   TicketHolderData,
   // Product ticket info
   ProductTicketInfo,
+  // Digital downloads
+  OrderDownload,
+  OrderDownloadLineItem,
+  OrderDownloadsResponse,
+  DownloadUrlResponse,
+  DownloadsAuthOptions,
 } from "./types/index.js";
 
 // Checkout options (re-exported from resource for convenience)

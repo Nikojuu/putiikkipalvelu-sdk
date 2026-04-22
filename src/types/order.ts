@@ -42,6 +42,11 @@ export interface ConfirmationOrderLineItem {
   vatRate: number;
   /** Product images array */
   images: string[];
+  /**
+   * Snapshot of the product's digital instructions at purchase time.
+   * Populated for digital products; null otherwise.
+   */
+  digitalContent?: string | null;
 }
 
 // =============================================================================
