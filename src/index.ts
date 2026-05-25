@@ -162,6 +162,11 @@ export type {
   OrderDownloadsResponse,
   DownloadUrlResponse,
   DownloadsAuthOptions,
+  // Withdrawal (KKV peruutustoiminto)
+  WithdrawalItem,
+  WithdrawalNoticeParams,
+  WithdrawalSubmitResponse,
+  WithdrawalResolveTokenResponse,
 } from "./types/index.js";
 
 // Checkout options (re-exported from resource for convenience)

@@ -38,6 +38,10 @@ import {
   createTicketsResource,
   type TicketsResource,
 } from "./resources/tickets.js";
+import {
+  createWithdrawalResource,
+  type WithdrawalResource,
+} from "./resources/withdrawal.js";
 
 /**
  * The Storefront API client
@@ -102,6 +106,11 @@ export interface StorefrontClient {
    * Tickets resource for ticket scanning and validation
    */
   readonly tickets: TicketsResource;
+
+  /**
+   * Withdrawal resource for consumer withdrawal notices (KKV peruutustoiminto)
+   */
+  readonly withdrawal: WithdrawalResource;
 }
 
 /**
@@ -138,5 +147,6 @@ export function createStorefrontClient(config: StorefrontClientConfig): Storefro
     discountCode: createDiscountCodeResource(fetcher),
     pages: createPagesResource(fetcher),
     tickets: createTicketsResource(fetcher),
+    withdrawal: createWithdrawalResource(fetcher),
   };
 }

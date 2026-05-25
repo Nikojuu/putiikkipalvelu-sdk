@@ -18,6 +18,7 @@ export * from "./discount-code.js";
 export * from "./pages.js";
 export * from "./ticket.js";
 export * from "./digital-downloads.js";
+export * from "./withdrawal.js";
 
 // =============================================================================
 // SDK Configuration
