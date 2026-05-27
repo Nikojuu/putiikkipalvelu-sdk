@@ -143,6 +143,12 @@ export interface FeatureFlags {
   newsletterEnabled: boolean;
   /** Whether product reviews are enabled */
   reviewsEnabled: boolean;
+  /**
+   * Whether the KKV peruutustoiminto (withdrawal function) is enabled.
+   * Storefronts should gate the footer link, order-confirmation paragraph,
+   * and `/peruutus` page on this flag. Defaults to true.
+   */
+  withdrawalEnabled: boolean;
 }
 
 // =============================================================================
