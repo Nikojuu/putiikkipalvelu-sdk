@@ -27,6 +27,8 @@ export interface Customer {
   createdAt?: string;
   /** Email verification timestamp - null if not verified (only in login response) */
   emailVerified?: string | null;
+  /** Whether the customer has opted in to the store's newsletter */
+  isSubscribedToNewsletter?: boolean;
 }
 
 // =============================================================================
@@ -45,6 +47,8 @@ export interface RegisterData {
   email: string;
   /** Password (minimum 8 characters) */
   password: string;
+  /** Whether the customer opts in to the store's newsletter at signup (defaults to false) */
+  isSubscribedToNewsletter?: boolean;
 }
 
 /**
@@ -157,6 +161,8 @@ export interface UpdateProfileData {
   lastName?: string;
   /** Updated email address */
   email?: string;
+  /** Updated newsletter subscription preference */
+  isSubscribedToNewsletter?: boolean;
 }
 
 /**
