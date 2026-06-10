@@ -149,6 +149,12 @@ export interface FeatureFlags {
    * and `/peruutus` page on this flag. Defaults to true.
    */
   withdrawalEnabled: boolean;
+  /**
+   * Whether customer accounts are enabled for the store. When false, the
+   * storefront should hide all account UI (login, register, account area,
+   * wishlist) and guard those routes. Defaults to true.
+   */
+  customerAccountsEnabled: boolean;
 }
 
 // =============================================================================
