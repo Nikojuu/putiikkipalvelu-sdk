@@ -42,6 +42,10 @@ import {
   createWithdrawalResource,
   type WithdrawalResource,
 } from "./resources/withdrawal.js";
+import {
+  createReviewsResource,
+  type ReviewsResource,
+} from "./resources/reviews.js";
 
 /**
  * The Storefront API client
@@ -111,6 +115,11 @@ export interface StorefrontClient {
    * Withdrawal resource for consumer withdrawal notices (KKV peruutustoiminto)
    */
   readonly withdrawal: WithdrawalResource;
+
+  /**
+   * Reviews resource for listing and submitting product reviews
+   */
+  readonly reviews: ReviewsResource;
 }
 
 /**
@@ -148,5 +157,6 @@ export function createStorefrontClient(config: StorefrontClientConfig): Storefro
     pages: createPagesResource(fetcher),
     tickets: createTicketsResource(fetcher),
     withdrawal: createWithdrawalResource(fetcher),
+    reviews: createReviewsResource(fetcher),
   };
 }

@@ -138,6 +138,10 @@ export interface ProductDetail extends Omit<Product, "variations"> {
    * Only populated when isDigital=true; null otherwise.
    */
   digitalContent?: string | null;
+  /** Average rating across approved reviews (null when there are none) */
+  averageRating: number | null;
+  /** Number of approved reviews */
+  reviewCount: number;
 }
 
 // =============================================================================

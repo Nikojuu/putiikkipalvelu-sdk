@@ -167,6 +167,13 @@ export type {
   WithdrawalNoticeParams,
   WithdrawalSubmitResponse,
   WithdrawalResolveTokenResponse,
+  // Reviews
+  ReviewStatus,
+  Review,
+  ReviewListResponse,
+  SubmitReviewParams,
+  SubmitReviewReward,
+  SubmitReviewResponse,
 } from "./types/index.js";
 
 // Checkout options (re-exported from resource for convenience)
