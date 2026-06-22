@@ -180,7 +180,10 @@ export type ProductSortOption =
   | "price_asc"
   | "price_desc"
   | "popularity"
-  | "relevance";
+  | "relevance"
+  /** The merchant's manual per-category order (set in the dashboard). Only
+   *  meaningful within a category; falls back to "newest" on all-products. */
+  | "featured";
 
 /**
  * Parameters for sorted products

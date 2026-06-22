@@ -4,6 +4,8 @@
  * Types for the store config endpoint response.
  */
 
+import type { ProductSortOption } from "./products";
+
 // =============================================================================
 // Store Configuration
 // =============================================================================
@@ -79,6 +81,10 @@ export interface StoreInfo {
   logoUrl: string | null;
   /** Product image aspect ratio: SQUARE (1:1) or PORTRAIT (3:4) */
   imageAspectRatio: ImageAspectRatio;
+  /** Default product sort for storefront category pages before the shopper
+   *  picks a sort. "featured" = the merchant's manual per-category order.
+   *  Optional for backward compatibility with older backends. */
+  defaultProductSort?: ProductSortOption;
 }
 
 /**
