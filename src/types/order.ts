@@ -128,6 +128,24 @@ export type OrderStatus =
   | "REFUNDED";
 
 // =============================================================================
+// Release Pending Order
+// =============================================================================
+
+/**
+ * Response from POST /order/{orderId}/release
+ *
+ * Reports whether the call cancelled the order and restored its reserved
+ * stock, or whether the order was already finalized (e.g. a payment callback
+ * won the race and the order is PAID).
+ */
+export interface ReleasePendingOrderResponse {
+  /** Whether this call cancelled the order and restored its stock */
+  released: boolean;
+  /** The order's status after the call */
+  status: OrderStatus | null;
+}
+
+// =============================================================================
 // Order
 // =============================================================================
 

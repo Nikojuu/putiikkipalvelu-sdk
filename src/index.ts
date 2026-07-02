@@ -114,6 +114,7 @@ export type {
   ConfirmationOrderCustomerData,
   ConfirmationOrderShipmentMethod,
   ConfirmationItemType,
+  ReleasePendingOrderResponse,
   // Pages
   StorePage,
   PageSeo,

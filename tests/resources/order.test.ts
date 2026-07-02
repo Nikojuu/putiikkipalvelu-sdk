@@ -250,4 +250,64 @@ describe("order resource", () => {
       );
     });
   });
+
+  describe("releasePending", () => {
+    it("should release a pending order via POST", async () => {
+      mockFetch.mockResolvedValueOnce(
+        createMockResponse({
+          json: async () => ({ released: true, status: "CANCELLED" }),
+        })
+      );
+
+      const result = await client.order.releasePending("order-123");
+
+      expect(result).toEqual({ released: true, status: "CANCELLED" });
+      expect(mockFetch).toHaveBeenCalledWith(
+        expect.stringContaining("/order/order-123/release"),
+        expect.objectContaining({ method: "POST" })
+      );
+    });
+
+    it("should report the current status when the payment won the race", async () => {
+      mockFetch.mockResolvedValueOnce(
+        createMockResponse({
+          json: async () => ({ released: false, status: "PAID" }),
+        })
+      );
+
+      const result = await client.order.releasePending("order-123");
+
+      expect(result).toEqual({ released: false, status: "PAID" });
+    });
+
+    it("should encode the order ID", async () => {
+      mockFetch.mockResolvedValueOnce(
+        createMockResponse({
+          json: async () => ({ released: true, status: "CANCELLED" }),
+        })
+      );
+
+      await client.order.releasePending("order/with/slashes");
+
+      expect(mockFetch).toHaveBeenCalledWith(
+        expect.stringContaining("/order/order%2Fwith%2Fslashes/release"),
+        expect.objectContaining({ method: "POST" })
+      );
+    });
+
+    it("should throw when the order is not a Paytrail order", async () => {
+      mockFetch.mockResolvedValueOnce(
+        createMockResponse({
+          ok: false,
+          status: 400,
+          statusText: "Bad Request",
+          json: async () => ({ error: "Not a Paytrail order" }),
+        })
+      );
+
+      await expect(client.order.releasePending("order-123")).rejects.toThrow(
+        "Not a Paytrail order"
+      );
+    });
+  });
 });

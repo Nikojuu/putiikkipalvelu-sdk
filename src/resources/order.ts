@@ -4,6 +4,7 @@ import type {
   OrderDownloadsResponse,
   DownloadUrlResponse,
   DownloadsAuthOptions,
+  ReleasePendingOrderResponse,
 } from "../types/index.js";
 import type { Fetcher } from "../utils/fetch.js";
 
@@ -113,6 +114,51 @@ export function createOrderResource(fetcher: Fetcher) {
      * window.location.href = url;
      * ```
      */
+    /**
+     * Release an abandoned PENDING Paytrail order: cancel it and restore its
+     * reserved stock.
+     *
+     * Stock is reserved when a Paytrail checkout session is created, before
+     * the customer pays. Call this when the customer has idled past the
+     * payment-page timeout — BEFORE redirecting them back to the cart, so
+     * their own reservation doesn't count against them in cart validation —
+     * or to release a previous pending order before creating a new checkout
+     * session for the same cart.
+     *
+     * Race-safe: only an order still in PENDING status is affected. If a
+     * payment callback finalized the order first, nothing changes and the
+     * current status is returned — check for PAID/SHIPPED and send the
+     * customer to the success page instead of the cart.
+     *
+     * @param orderId - The order ID to release
+     * @param options - Fetch options (headers, signal, etc.)
+     * @returns Whether the order was released, and its status after the call
+     * @throws StorefrontError with status 404 if the order doesn't exist or belongs to a different store
+     * @throws StorefrontError with status 400 if the order is not a Paytrail order
+     *
+     * @example Payment-page timeout
+     * ```typescript
+     * const { released, status } = await client.order.releasePending(orderId);
+     * if (!released && (status === "PAID" || status === "SHIPPED")) {
+     *   router.push(`/payment/success/${orderId}`); // payment won the race
+     * } else {
+     *   router.push("/cart?expired=1");
+     * }
+     * ```
+     */
+    async releasePending(
+      orderId: string,
+      options?: FetchOptions
+    ): Promise<ReleasePendingOrderResponse> {
+      return fetcher.request<ReleasePendingOrderResponse>(
+        `/api/storefront/v1/order/${encodeURIComponent(orderId)}/release`,
+        {
+          ...options,
+          method: "POST",
+        }
+      );
+    },
+
     async getDownloadUrl(
       orderId: string,
       downloadId: string,
