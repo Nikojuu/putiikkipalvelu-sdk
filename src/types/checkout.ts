@@ -81,6 +81,16 @@ export interface StripeCheckoutResponse {
 }
 
 /**
+ * Response from PayPal checkout
+ */
+export interface PayPalCheckoutResponse {
+  /** URL to redirect the buyer to PayPal's approval page */
+  url: string;
+  /** PayPal order id (Orders v2) — useful for support and reconciliation */
+  paypalOrderId: string;
+}
+
+/**
  * Payment provider from Paytrail
  */
 export interface PaytrailProvider {

@@ -141,6 +141,7 @@ export type {
   CheckoutShipmentMethod,
   CheckoutParams,
   StripeCheckoutResponse,
+  PayPalCheckoutResponse,
   PaytrailCheckoutResponse,
   PaytrailProvider,
   PaytrailGroup,

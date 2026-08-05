@@ -2,6 +2,7 @@ import type {
   FetchOptions,
   CheckoutParams,
   StripeCheckoutResponse,
+  PayPalCheckoutResponse,
   PaytrailCheckoutResponse,
 } from "../types/index.js";
 import type { Fetcher } from "../utils/fetch.js";
@@ -27,7 +28,7 @@ export interface CheckoutOptions extends FetchOptions {
 /**
  * Checkout resource for payment processing
  *
- * Handles both Stripe and Paytrail payment providers.
+ * Handles Stripe, Paytrail and PayPal payment providers.
  */
 export function createCheckoutResource(fetcher: Fetcher) {
   /**
@@ -108,6 +109,54 @@ export function createCheckoutResource(fetcher: Fetcher) {
 
       return fetcher.request<StripeCheckoutResponse>(
         "/api/storefront/v1/payments/stripe/checkout",
+        {
+          method: "POST",
+          body,
+          headers: {
+            ...options?.headers,
+            ...headers,
+          },
+          ...options,
+        }
+      );
+    },
+
+    /**
+     * Create a PayPal checkout session.
+     *
+     * Returns a hosted PayPal approval URL. Redirect the buyer there; PayPal
+     * returns them to the backend, which captures the payment and forwards
+     * them to your successUrl.
+     *
+     * @param params - Checkout parameters (customer data, shipping, URLs)
+     * @param options - Checkout options including cart/session context
+     * @returns URL to redirect the buyer to PayPal
+     * @throws ValidationError for invalid data or empty cart
+     * @throws StorefrontError for inventory issues
+     *
+     * @example
+     * ```typescript
+     * const { url } = await client.checkout.paypal({
+     *   customerData,
+     *   shipmentMethod,
+     *   orderId,
+     *   successUrl: `${BASE}/payment/success/${orderId}`,
+     *   cancelUrl: `${BASE}/payment/cancel/${orderId}`,
+     * }, { cartId, sessionId });
+     *
+     * // Redirect to PayPal
+     * window.location.href = url;
+     * ```
+     */
+    async paypal(
+      params: CheckoutParams,
+      options?: CheckoutOptions
+    ): Promise<PayPalCheckoutResponse> {
+      const headers = buildCheckoutHeaders(options);
+      const body = buildCheckoutBody(params);
+
+      return fetcher.request<PayPalCheckoutResponse>(
+        "/api/storefront/v1/payments/paypal/checkout",
         {
           method: "POST",
           body,

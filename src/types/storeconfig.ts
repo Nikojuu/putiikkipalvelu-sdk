@@ -131,8 +131,19 @@ export interface StoreSeo {
  * Payment configuration
  */
 export interface PaymentConfig {
-  /** Available payment methods (e.g., ["stripe", "paytrail"]) */
+  /** Available payment methods (e.g., ["stripe", "paytrail", "paypal"]) */
   methods: string[];
+  /**
+   * The redirect/gateway provider driving the main checkout flow.
+   * Optional for backward compatibility with older backends — derive from
+   * `methods` when absent.
+   */
+  primary?: "stripe" | "paytrail" | null;
+  /**
+   * Wallet providers offered alongside the primary provider, e.g. ["paypal"].
+   * Optional for backward compatibility with older backends.
+   */
+  wallets?: string[];
   /** Default VAT rate */
   defaultVatRate: number;
 }

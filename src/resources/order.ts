@@ -134,7 +134,7 @@ export function createOrderResource(fetcher: Fetcher) {
      * @param options - Fetch options (headers, signal, etc.)
      * @returns Whether the order was released, and its status after the call
      * @throws StorefrontError with status 404 if the order doesn't exist or belongs to a different store
-     * @throws StorefrontError with status 400 if the order is not a Paytrail order
+     * @throws StorefrontError with status 400 if the order is not a Paytrail or PayPal order (Stripe sessions expire on their own)
      *
      * @example Payment-page timeout
      * ```typescript
