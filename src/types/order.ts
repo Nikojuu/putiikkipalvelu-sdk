@@ -178,4 +178,9 @@ export interface Order {
   discountAmount: number | null;
   /** VAT rate used for the discount calculation */
   discountVatRate: number | null;
+  /**
+   * Payment provider that handled this order. Null on orders created before
+   * provider stamping was introduced — infer nothing from null.
+   */
+  paymentProvider?: "STRIPE" | "PAYTRAIL" | "PAYPAL" | null;
 }

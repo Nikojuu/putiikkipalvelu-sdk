@@ -110,13 +110,16 @@ export function createCheckoutResource(fetcher: Fetcher) {
       return fetcher.request<StripeCheckoutResponse>(
         "/api/storefront/v1/payments/stripe/checkout",
         {
+          // Spread FIRST: a trailing spread would clobber the merged headers
+          // below and silently drop x-cart-id / x-session-id when a caller
+          // passes options.headers
+          ...options,
           method: "POST",
           body,
           headers: {
             ...options?.headers,
             ...headers,
           },
-          ...options,
         }
       );
     },
@@ -158,13 +161,16 @@ export function createCheckoutResource(fetcher: Fetcher) {
       return fetcher.request<PayPalCheckoutResponse>(
         "/api/storefront/v1/payments/paypal/checkout",
         {
+          // Spread FIRST: a trailing spread would clobber the merged headers
+          // below and silently drop x-cart-id / x-session-id when a caller
+          // passes options.headers
+          ...options,
           method: "POST",
           body,
           headers: {
             ...options?.headers,
             ...headers,
           },
-          ...options,
         }
       );
     },
@@ -241,13 +247,16 @@ export function createCheckoutResource(fetcher: Fetcher) {
       return fetcher.request<PaytrailCheckoutResponse>(
         "/api/storefront/v1/payments/paytrail/checkout",
         {
+          // Spread FIRST: a trailing spread would clobber the merged headers
+          // below and silently drop x-cart-id / x-session-id when a caller
+          // passes options.headers
+          ...options,
           method: "POST",
           body,
           headers: {
             ...options?.headers,
             ...headers,
           },
-          ...options,
         }
       );
     },
