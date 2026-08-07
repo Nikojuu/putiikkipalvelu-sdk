@@ -82,12 +82,13 @@ export interface ConfirmationOrderCustomerData {
 /**
  * Shipment method information attached to an order
  * Includes tracking information when available
+ *
+ * Note: fulfilment internals (record id, orderId, serviceId, shipmentNumber
+ * and freightDoc) are intentionally NOT part of this payload — freight
+ * documents are unauthenticated label PDFs carrying the customer's address,
+ * so they stay inside the merchant dashboard.
  */
 export interface ConfirmationOrderShipmentMethod {
-  /** Shipment method record ID */
-  id: string;
-  /** Carrier service ID (for Shipit integration) */
-  serviceId: string | null;
   /** Shipment method display name */
   name: string;
   /** Description of the shipment method */
@@ -96,18 +97,12 @@ export interface ConfirmationOrderShipmentMethod {
   logo: string | null;
   /** Shipping price in cents */
   price: number;
-  /** Parent order ID */
-  orderId: string;
   /** VAT rate percentage */
   vatRate: number | null;
   /** Tracking number (when shipped) */
   trackingNumber: string | null;
   /** Array of tracking URLs */
   trackingUrls: string[];
-  /** Shipit shipment number */
-  shipmentNumber: string | null;
-  /** Freight document URLs */
-  freightDoc: string[];
 }
 
 // =============================================================================
