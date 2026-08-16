@@ -1,6 +1,9 @@
 import type { FetchOptions } from "../types/index.js";
 import {
   StorefrontError,
+  AuthError,
+  NotFoundError,
+  ValidationError,
   RateLimitError,
   VerificationRequiredError,
 } from "./errors.js";
@@ -122,6 +125,8 @@ interface ErrorResponseJson {
   code?: string;
   requiresVerification?: boolean;
   customerId?: string;
+  /** Current slug of a renamed product/category — storefront should 301 to it */
+  redirectTo?: string;
 }
 
 /**
@@ -149,12 +154,24 @@ async function handleErrorResponse(response: Response): Promise<never> {
   // Use API-provided code if available, otherwise use default for status
   const code = errorData.code;
 
+  // Throw the documented subclasses so `instanceof NotFoundError` etc. work
+  // in consuming storefronts (previously everything was a base StorefrontError)
   switch (response.status) {
-    case 401:
-      throw new StorefrontError(message, 401, code || "UNAUTHORIZED");
+    case 401: {
+      const error = new AuthError(message);
+      if (code) {
+        (error as { code: string }).code = code;
+      }
+      throw error;
+    }
 
-    case 404:
-      throw new StorefrontError(message, 404, code || "NOT_FOUND");
+    case 404: {
+      const error = new NotFoundError(message, errorData.redirectTo ?? null);
+      if (code) {
+        (error as { code: string }).code = code;
+      }
+      throw error;
+    }
 
     case 429: {
       const retryAfter = response.headers.get("Retry-After");
@@ -166,8 +183,13 @@ async function handleErrorResponse(response: Response): Promise<never> {
       throw error;
     }
 
-    case 400:
-      throw new StorefrontError(message, 400, code || "VALIDATION_ERROR");
+    case 400: {
+      const error = new ValidationError(message);
+      if (code) {
+        (error as { code: string }).code = code;
+      }
+      throw error;
+    }
 
     default:
       throw new StorefrontError(message, response.status, code || "API_ERROR");

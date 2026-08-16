@@ -46,11 +46,21 @@ export class RateLimitError extends StorefrontError {
 
 /**
  * Error thrown when a requested resource is not found (404)
+ *
+ * When the resource was renamed (product/category slug changed), the API
+ * reports the current slug in `redirectTo` — storefronts should issue a
+ * permanent (301) redirect to it instead of rendering a 404.
  */
 export class NotFoundError extends StorefrontError {
-  constructor(message: string = "Resource not found") {
+  public readonly redirectTo: string | null;
+
+  constructor(
+    message: string = "Resource not found",
+    redirectTo: string | null = null
+  ) {
     super(message, 404, "NOT_FOUND");
     this.name = "NotFoundError";
+    this.redirectTo = redirectTo;
   }
 }
 
