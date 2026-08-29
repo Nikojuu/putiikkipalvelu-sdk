@@ -50,6 +50,16 @@ export interface GetShippingOptionsParams extends FetchOptions {
   discountAmount?: number;
   /** Country code (default: "FI") */
   country?: string;
+  /**
+   * Customer's street address. Optional, but strongly recommended: Matkahuolto
+   * ranks pickup points by distance from the location given, and a postal code
+   * alone resolves to a single point for the whole area — which returns a
+   * noticeably worse set of offices. Ignored by carriers that only accept a
+   * postal code.
+   */
+  streetAddress?: string;
+  /** Customer's city. Same purpose as streetAddress. */
+  city?: string;
 }
 
 /**
@@ -129,6 +139,14 @@ export function createShippingResource(fetcher: Fetcher) {
 
       if (options?.country) {
         params.set("country", options.country);
+      }
+
+      if (options?.streetAddress) {
+        params.set("address", options.streetAddress);
+      }
+
+      if (options?.city) {
+        params.set("city", options.city);
       }
 
       const queryString = params.toString();

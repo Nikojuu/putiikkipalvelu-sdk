@@ -46,7 +46,7 @@ export interface HomeDeliveryOption {
   /** Carrier logo URL */
   logo: string | null;
   /** Provider type */
-  provider: "shipit" | "custom";
+  provider: "shipit" | "custom" | "matkahuolto";
   /** Carrier name (e.g., "Posti", "Matkahuolto") - null for custom methods */
   carrier: string | null;
   /** Estimated delivery time (e.g., "1-3") - null if not available */
@@ -66,7 +66,7 @@ export interface PickupPointOption {
   id: string;
   /** ShipmentMethods.id - needed for checkout */
   shipmentMethodId: string;
-  /** Shipit service ID - needed for checkout and shipment creation */
+  /** Carrier service ID (Shipit serviceId / Matkahuolto product code) - needed for checkout and shipment creation */
   serviceId: string;
   /** Location name (e.g., "Lidl Graniittitalo") */
   name: string;
@@ -85,11 +85,18 @@ export interface PickupPointOption {
   /** Carrier logo URL */
   logo: string | null;
   /** Provider type */
-  provider: "shipit" | "custom";
+  provider: "shipit" | "custom" | "matkahuolto";
   /** Carrier name (e.g., "Posti", "Matkahuolto") */
   carrier: string | null;
   /** Distance from customer's postal code in meters */
   distance: number | null;
+  /**
+   * Service description for this delivery, suitable for an expandable
+   * "details" row at checkout. Matkahuolto products carry Matkahuolto's own
+   * recommended wording; other providers carry the merchant's own text.
+   * null when neither exists.
+   */
+  description: string | null;
   /** Structured opening hours */
   openingHours: OpeningHours | null;
   /** GPS coordinates */
