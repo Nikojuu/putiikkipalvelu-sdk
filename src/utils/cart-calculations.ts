@@ -108,8 +108,11 @@ export function calculateCartWithCampaigns(
     return [];
   });
 
-  // Not enough eligible items - return original quantities
-  if (eligibleUnits.length < buyQuantity) {
+  // Not enough eligible items, or an inverted/equal buy/pay pair (a merchant
+  // typo such as "Osta 2, maksa 3" would otherwise make slice(0, -n) mark
+  // every unit except the last n free) - return original quantities
+  const numToMakeFree = buyQuantity - payQuantity;
+  if (numToMakeFree <= 0 || eligibleUnits.length < buyQuantity) {
     const calculatedItems = items.map((item) => ({
       item,
       paidQuantity: item.cartQuantity,
@@ -128,7 +131,6 @@ export function calculateCartWithCampaigns(
   // Sort by price to find the cheapest items to make free
   eligibleUnits.sort((a, b) => a.price - b.price);
 
-  const numToMakeFree = buyQuantity - payQuantity;
   const itemsToMakeFree = eligibleUnits.slice(0, numToMakeFree);
 
   // Calculate total savings from free items
