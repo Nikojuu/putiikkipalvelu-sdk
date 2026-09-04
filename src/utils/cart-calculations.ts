@@ -23,6 +23,32 @@ interface EligibleUnit {
 }
 
 /**
+ * Whether a campaign is live right now: toggled active AND inside its date
+ * window. The storefront receives every toggled-on campaign from store-config
+ * (which is cached server-side for 24 h), so the date window is evaluated
+ * here, at render time, rather than on the server — a campaign scheduled for
+ * tomorrow shows up tomorrow, and one that ended yesterday disappears today,
+ * without waiting on the cache.
+ *
+ * `endDate` is stored as the end of its day by the dashboard, so `>=` keeps
+ * the last day inclusive.
+ *
+ * @example
+ * ```typescript
+ * const live = storeConfig.campaigns.filter((c) => isCampaignActive(c));
+ * ```
+ */
+export function isCampaignActive(
+  campaign: Campaign,
+  now: Date = new Date()
+): boolean {
+  if (!campaign.isActive) return false;
+  if (campaign.startDate && new Date(campaign.startDate) > now) return false;
+  if (campaign.endDate && new Date(campaign.endDate) < now) return false;
+  return true;
+}
+
+/**
  * Calculate cart totals with campaign discounts applied.
  *
  * Supports BUY_X_PAY_Y campaigns: Buy X items, pay for Y (e.g., Buy 3 Pay 2 = 1 free item)
@@ -50,7 +76,7 @@ export function calculateCartWithCampaigns(
 ): CartCalculationResult {
   // Find applicable campaigns
   const buyXPayYCampaign = campaigns.find(
-    (c) => c.type === "BUY_X_PAY_Y" && c.isActive
+    (c) => c.type === "BUY_X_PAY_Y" && isCampaignActive(c)
   );
 
   // Calculate original total (without campaign discounts)
@@ -108,11 +134,18 @@ export function calculateCartWithCampaigns(
     return [];
   });
 
-  // Not enough eligible items, or an inverted/equal buy/pay pair (a merchant
-  // typo such as "Osta 2, maksa 3" would otherwise make slice(0, -n) mark
-  // every unit except the last n free) - return original quantities
-  const numToMakeFree = buyQuantity - payQuantity;
-  if (numToMakeFree <= 0 || eligibleUnits.length < buyQuantity) {
+  // The offer repeats for every complete set of `buyQuantity` eligible units
+  // (6 units in "Osta 3, maksa 2" -> 2 free); the free units are the cheapest
+  // across the whole pool. Mirrors the backend checkout engine.
+  // Not enough eligible items for one set, or an inverted/equal buy/pay pair
+  // (a merchant typo such as "Osta 2, maksa 3" would otherwise make
+  // slice(0, -n) mark every unit except the last n free) - return original
+  // quantities
+  const freePerSet = buyQuantity - payQuantity;
+  const completeSets =
+    buyQuantity > 0 ? Math.floor(eligibleUnits.length / buyQuantity) : 0;
+  const numToMakeFree = freePerSet * completeSets;
+  if (freePerSet <= 0 || numToMakeFree <= 0) {
     const calculatedItems = items.map((item) => ({
       item,
       paidQuantity: item.cartQuantity,

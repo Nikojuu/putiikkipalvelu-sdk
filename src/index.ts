@@ -185,7 +185,10 @@ export type { CheckoutOptions } from "./resources/checkout.js";
 export { isSaleActive, getPriceInfo } from "./utils/pricing.js";
 
 // Cart calculation utilities
-export { calculateCartWithCampaigns } from "./utils/cart-calculations.js";
+export {
+  calculateCartWithCampaigns,
+  isCampaignActive,
+} from "./utils/cart-calculations.js";
 
 // Discount utilities
 export {
