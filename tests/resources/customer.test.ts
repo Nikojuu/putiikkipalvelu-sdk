@@ -1,6 +1,11 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { createStorefrontClient } from "../../src/client.js";
-import { AuthError, ValidationError, NotFoundError } from "../../src/utils/errors.js";
+import {
+  AuthError,
+  ValidationError,
+  NotFoundError,
+  VerificationRequiredError,
+} from "../../src/utils/errors.js";
 
 // Mock global fetch
 const mockFetch = vi.fn();
@@ -234,9 +239,13 @@ describe("customer resource", () => {
         })
       );
 
-      await expect(
-        client.customer.login("john@example.com", "password123")
-      ).rejects.toThrow(ValidationError);
+      const login = client.customer.login("john@example.com", "password123");
+
+      await expect(login).rejects.toThrow(VerificationRequiredError);
+      await expect(login).rejects.toMatchObject({
+        requiresVerification: true,
+        customerId: "cust_123",
+      });
     });
   });
 

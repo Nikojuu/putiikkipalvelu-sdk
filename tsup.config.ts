@@ -1,6 +1,12 @@
 import { defineConfig } from "tsup";
+import pkg from "./package.json";
 
 export default defineConfig({
+  // Inject the real package version into the x-sdk-version request header
+  define: {
+    __SDK_VERSION__: JSON.stringify(pkg.version),
+  },
+
   // Entry point
   entry: ["src/index.ts"],
 

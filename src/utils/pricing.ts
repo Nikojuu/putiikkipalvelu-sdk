@@ -75,6 +75,11 @@ export function isSaleActive(
  *
  * // Product with selected variation
  * const priceInfo = getPriceInfo(product, selectedVariation);
+ *
+ * // KSL 2:11 § reference price — show whenever isOnSale and not null
+ * if (priceInfo.lowestPriceBeforeSale !== null) {
+ *   render(`Alin hinta 30 pv ennen alennusta: ${priceInfo.lowestPriceBeforeSale / 100} €`);
+ * }
  * ```
  */
 export function getPriceInfo(
@@ -97,6 +102,9 @@ export function getPriceInfo(
       originalPrice,
       isOnSale,
       salePercent: isOnSale ? (variation.salePercent ?? null) : null,
+      lowestPriceBeforeSale: isOnSale
+        ? (variation.lowestPriceBeforeSale ?? null)
+        : null,
     };
   }
 
@@ -115,5 +123,8 @@ export function getPriceInfo(
     originalPrice,
     isOnSale,
     salePercent: isOnSale ? (product.salePercent ?? null) : null,
+    lowestPriceBeforeSale: isOnSale
+      ? (product.lowestPriceBeforeSale ?? null)
+      : null,
   };
 }

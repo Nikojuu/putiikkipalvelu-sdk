@@ -39,6 +39,14 @@ export interface ProductVariationListing {
   saleStartDate: string | null;
   /** Sale end date (ISO 8601), null = no end */
   saleEndDate: string | null;
+  /**
+   * KSL 2:11 § (EU Omnibus) reference price in cents: the lowest price this
+   * item was marketed at during the 30 days before the current sale started.
+   * Must be shown next to the sale price whenever a reduction is announced.
+   * null when not on sale, when price history does not yet cover 30 days, or
+   * when the store has turned the display off. Absent on older API versions.
+   */
+  lowestPriceBeforeSale?: number | null;
 }
 
 /**
@@ -92,6 +100,14 @@ export interface Product {
   saleStartDate: string | null;
   /** Sale end date (ISO 8601), null = no end */
   saleEndDate: string | null;
+  /**
+   * KSL 2:11 § (EU Omnibus) reference price in cents: the lowest price this
+   * item was marketed at during the 30 days before the current sale started.
+   * Must be shown next to the sale price whenever a reduction is announced.
+   * null when not on sale, when price history does not yet cover 30 days, or
+   * when the store has turned the display off. Absent on older API versions.
+   */
+  lowestPriceBeforeSale?: number | null;
   /** True if this product is delivered as a digital download (no shipping) */
   isDigital?: boolean;
   /** Product variations (minimal fields for listing) */

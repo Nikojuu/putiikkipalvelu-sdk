@@ -8,8 +8,11 @@ import {
   VerificationRequiredError,
 } from "./errors.js";
 
-// SDK version - will be replaced during build or read from package.json
-const SDK_VERSION = "0.1.0";
+// Injected from package.json via `define` in tsup.config.ts / vitest.config.ts.
+// Falls back when the source is consumed without either (e.g. plain ts-node).
+declare const __SDK_VERSION__: string | undefined;
+const SDK_VERSION =
+  typeof __SDK_VERSION__ === "string" ? __SDK_VERSION__ : "unknown";
 
 export interface FetcherConfig {
   apiKey: string;

@@ -12,14 +12,14 @@ describe("createStorefrontClient", () => {
     expect(client.baseUrl).toBe("https://api.example.com/v1");
   });
 
-  it("should mask the API key", () => {
+  it("should not expose the API key on the client", () => {
     const client = createStorefrontClient({
       apiKey: "test-api-key-12345678",
       baseUrl: "https://api.example.com/v1",
     });
 
-    expect(client.apiKey).toBe("test-api...");
-    expect(client.apiKey).not.toContain("12345678");
+    expect(client).not.toHaveProperty("apiKey");
+    expect(JSON.stringify(client)).not.toContain("test-api-key");
   });
 
   it("should remove trailing slash from baseUrl", () => {

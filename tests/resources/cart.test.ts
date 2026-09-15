@@ -485,7 +485,7 @@ describe("cart resource", () => {
         })
       );
 
-      await client.cart.validate({ cartId: "test" }, {
+      await client.cart.validate({ cartId: "test" }, undefined, undefined, {
         next: { revalidate: 0, tags: ["cart"] },
       });
 
