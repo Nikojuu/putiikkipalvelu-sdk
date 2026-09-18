@@ -78,7 +78,7 @@ export function isSaleActive(
  *
  * // KSL 2:11 § reference price — show whenever isOnSale and not null
  * if (priceInfo.lowestPriceBeforeSale !== null) {
- *   render(`Alin hinta 30 pv ennen alennusta: ${priceInfo.lowestPriceBeforeSale / 100} €`);
+ *   render(`Alin hinta 30 pv: ${priceInfo.lowestPriceBeforeSale / 100} €`);
  * }
  * ```
  */

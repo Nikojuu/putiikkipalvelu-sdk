@@ -150,7 +150,7 @@ export interface PriceInfo {
   /**
    * KSL 2:11 § (EU Omnibus) reference price in cents while on sale: the lowest
    * price in the 30 days before the sale started. Render it next to the sale
-   * price ("Alin hinta 30 pv ennen alennusta") on cards AND product pages —
+   * price ("Alin hinta 30 pv") on cards AND product pages —
    * the FCCA requires it to be visible, not behind a link. null when not on
    * sale, when the API has no reference for this sale, or when the store has
    * turned the display off.
