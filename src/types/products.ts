@@ -41,10 +41,14 @@ export interface ProductVariationListing {
   saleEndDate: string | null;
   /**
    * KSL 2:11 § (EU Omnibus) reference price in cents: the lowest price this
-   * item was marketed at during the 30 days before the current sale started.
-   * Must be shown next to the sale price whenever a reduction is announced.
-   * null when not on sale, when price history does not yet cover 30 days, or
-   * when the store has turned the display off. Absent on older API versions.
+   * item was marketed at during the 30 days before the sale started. Raw
+   * stored value — render it only while the sale is active (getPriceInfo()
+   * does this); it can be non-null for a scheduled sale that has not started
+   * or an ended one until the nightly recalculation. Compute an announced
+   * percentage from this value, not the regular price (KKV 4.5). null when the
+   * item has no sale, when price history does not cover the 30 days before the
+   * sale started, or when the store has turned the display off. Absent on
+   * older API versions.
    */
   lowestPriceBeforeSale?: number | null;
 }
@@ -102,10 +106,14 @@ export interface Product {
   saleEndDate: string | null;
   /**
    * KSL 2:11 § (EU Omnibus) reference price in cents: the lowest price this
-   * item was marketed at during the 30 days before the current sale started.
-   * Must be shown next to the sale price whenever a reduction is announced.
-   * null when not on sale, when price history does not yet cover 30 days, or
-   * when the store has turned the display off. Absent on older API versions.
+   * item was marketed at during the 30 days before the sale started. Raw
+   * stored value — render it only while the sale is active (getPriceInfo()
+   * does this); it can be non-null for a scheduled sale that has not started
+   * or an ended one until the nightly recalculation. Compute an announced
+   * percentage from this value, not the regular price (KKV 4.5). null when the
+   * item has no sale, when price history does not cover the 30 days before the
+   * sale started, or when the store has turned the display off. Absent on
+   * older API versions.
    */
   lowestPriceBeforeSale?: number | null;
   /** True if this product is delivered as a digital download (no shipping) */

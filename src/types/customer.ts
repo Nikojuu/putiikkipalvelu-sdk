@@ -315,6 +315,8 @@ export interface WishlistVariation {
   price: number;
   /** Sale price in cents */
   salePrice: number | null;
+  /** KSL 2:11 § reference price in cents (see Product.lowestPriceBeforeSale); absent on older API versions */
+  lowestPriceBeforeSale?: number | null;
   /** Quantity in stock */
   quantity: number;
   /** Variation images */
@@ -347,6 +349,8 @@ export interface WishlistProduct {
   saleStartDate: string | null;
   /** Sale end date */
   saleEndDate: string | null;
+  /** KSL 2:11 § reference price in cents (see Product.lowestPriceBeforeSale); absent on older API versions */
+  lowestPriceBeforeSale?: number | null;
   /** Quantity in stock */
   quantity: number;
   /** Product SKU */
