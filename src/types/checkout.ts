@@ -26,6 +26,16 @@ export interface CheckoutCustomerData {
   city: string;
   /** Phone number */
   phone: string;
+  /**
+   * Buyer's company name (optional, max 100 chars).
+   * If either company field is given, both are required.
+   */
+  company_name?: string | null;
+  /**
+   * Buyer's Finnish business ID (Y-tunnus), e.g. "1234567-8".
+   * Check digit is validated; stored normalised to 1234567-8.
+   */
+  business_id?: string | null;
 }
 
 /**

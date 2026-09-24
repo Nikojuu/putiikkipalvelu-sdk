@@ -73,6 +73,10 @@ export interface ConfirmationOrderCustomerData {
   city: string;
   /** Delivery postal code */
   postalCode: string;
+  /** Buyer's company name (null for private buyers) */
+  companyName?: string | null;
+  /** Buyer's business ID (Y-tunnus, 1234567-8), null for private buyers */
+  businessId?: string | null;
 }
 
 // =============================================================================
