@@ -19,6 +19,12 @@ export interface StoreConfig {
   seo: StoreSeo;
   payments: PaymentConfig;
   navPages: NavPage[];
+  /**
+   * Published legal pages ("privacy", "terms") for the footer, in that order.
+   * The store owner can hide a legal page; a hidden page is left out here and
+   * its /pages/{slug} request returns 404, so link only the pages listed.
+   */
+  legalPages: NavPage[];
   campaigns: Campaign[];
   features: FeatureFlags;
   analytics: AnalyticsConfig;
