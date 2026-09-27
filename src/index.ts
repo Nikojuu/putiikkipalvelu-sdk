@@ -136,6 +136,7 @@ export type {
   TextGridBlock,
   TextGridItem,
   TableBlock,
+  LegalGuaranteeNoticeBlock,
   // Checkout
   CheckoutCustomerData,
   CheckoutShipmentMethod,

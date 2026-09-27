@@ -226,6 +226,30 @@ export interface TableBlock extends BaseBlock {
   };
 }
 
+/**
+ * EU harmonised notice on the legal guarantee of conformity
+ * (Regulation (EU) 2025/1960). Only on the "virhevastuu" legal page.
+ *
+ * The API fills `data` from one platform-wide copy of the official Commission
+ * artwork. Render it as-is: show the whole image, no cropping, no format
+ * conversion (use a plain <img> or next/image with `unoptimized`), and always
+ * add a clickable link to `linkUrl` — the Commission requires it online.
+ */
+export interface LegalGuaranteeNoticeBlock extends BaseBlock {
+  type: "legal_guarantee_notice";
+  data: {
+    /** Official notice artwork (PNG), served unmodified */
+    imageUrl: string;
+    /** Intrinsic size, for layout without shift */
+    width: number;
+    height: number;
+    /** Your Europe page the notice's QR code points to */
+    linkUrl: string;
+    /** Alt text for the image */
+    alt: string;
+  };
+}
+
 // =============================================================================
 // Discriminated union of all block types
 // =============================================================================
@@ -243,4 +267,5 @@ export type PageBlock =
   | OpeningHoursBlock
   | ImageGridBlock
   | TextGridBlock
-  | TableBlock;
+  | TableBlock
+  | LegalGuaranteeNoticeBlock;
