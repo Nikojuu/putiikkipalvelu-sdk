@@ -8,6 +8,7 @@ import type {
   WithdrawalNoticeParams,
   WithdrawalSubmitResponse,
   WithdrawalResolveTokenResponse,
+  FetchOptions,
 } from "../types/index.js";
 import type { Fetcher } from "../utils/fetch.js";
 
@@ -28,6 +29,8 @@ export function createWithdrawalResource(fetcher: Fetcher) {
      * endpoint never issues a refund.
      *
      * @param params - Notice payload (name, email, optional orderNumber + items + message)
+     * @param fetchOptions - Fetch options (e.g. `headers: { "x-client-ip": ip }`
+     *   so the per-visitor rate limit applies to the real visitor)
      * @returns Notice number and creation timestamp
      *
      * @example
@@ -43,13 +46,15 @@ export function createWithdrawalResource(fetcher: Fetcher) {
      * ```
      */
     async submit(
-      params: WithdrawalNoticeParams
+      params: WithdrawalNoticeParams,
+      fetchOptions?: FetchOptions
     ): Promise<WithdrawalSubmitResponse> {
       return fetcher.request<WithdrawalSubmitResponse>(
         "/api/storefront/v1/withdrawal",
         {
           method: "POST",
           body: params,
+          ...fetchOptions,
         }
       );
     },

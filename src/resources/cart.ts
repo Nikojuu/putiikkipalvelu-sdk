@@ -62,8 +62,9 @@ export function createCartResource(fetcher: Fetcher) {
     ): Promise<CartResponse> {
       return fetcher.request<CartResponse>("/api/storefront/v1/cart", {
         method: "GET",
-        headers: buildCartHeaders(options),
         ...fetchOptions,
+        // SDK headers win; caller headers (fetchOptions) are merged in, not replaced
+        headers: { ...fetchOptions?.headers, ...buildCartHeaders(options) },
       });
     },
 
@@ -104,12 +105,13 @@ export function createCartResource(fetcher: Fetcher) {
       const { cartId, sessionId, ...body } = params;
       return fetcher.request<CartResponse>("/api/storefront/v1/cart", {
         method: "POST",
-        headers: buildCartHeaders({ sessionId }),
         body: {
           cartId,
           ...body,
         },
         ...fetchOptions,
+        // SDK headers win; caller headers (fetchOptions) are merged in, not replaced
+        headers: { ...fetchOptions?.headers, ...buildCartHeaders({ sessionId }) },
       });
     },
 
@@ -149,12 +151,13 @@ export function createCartResource(fetcher: Fetcher) {
       const { cartId, sessionId, ...body } = params;
       return fetcher.request<CartResponse>("/api/storefront/v1/cart", {
         method: "PATCH",
-        headers: buildCartHeaders({ sessionId }),
         body: {
           cartId,
           ...body,
         },
         ...fetchOptions,
+        // SDK headers win; caller headers (fetchOptions) are merged in, not replaced
+        headers: { ...fetchOptions?.headers, ...buildCartHeaders({ sessionId }) },
       });
     },
 
@@ -189,12 +192,13 @@ export function createCartResource(fetcher: Fetcher) {
       const { cartId, sessionId, ...body } = params;
       return fetcher.request<CartResponse>("/api/storefront/v1/cart", {
         method: "DELETE",
-        headers: buildCartHeaders({ sessionId }),
         body: {
           cartId,
           ...body,
         },
         ...fetchOptions,
+        // SDK headers win; caller headers (fetchOptions) are merged in, not replaced
+        headers: { ...fetchOptions?.headers, ...buildCartHeaders({ sessionId }) },
       });
     },
 
@@ -255,8 +259,9 @@ export function createCartResource(fetcher: Fetcher) {
         "/api/storefront/v1/cart/validate",
         {
           method: "GET",
-          headers,
           ...fetchOptions,
+          // SDK headers win; caller headers (fetchOptions) are merged in, not replaced
+          headers: { ...fetchOptions?.headers, ...headers },
         }
       );
     },

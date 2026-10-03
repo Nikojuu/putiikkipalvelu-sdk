@@ -212,6 +212,37 @@ describe("customer resource", () => {
       );
     });
 
+    it("should merge caller headers without dropping SDK headers", async () => {
+      mockFetch.mockResolvedValueOnce(
+        createMockResponse({
+          json: async () => ({
+            success: true,
+            customer: mockCustomerWithEmailStatus,
+            message: "Login successful",
+            sessionId: "session_xyz789",
+            expiresAt: "2024-01-22T10:00:00.000Z",
+          }),
+        })
+      );
+
+      await client.customer.login(
+        "john@example.com",
+        "password123",
+        { cartId: "guest_cart_abc" },
+        { headers: { "x-client-ip": "203.0.113.7", "x-cart-id": "spoofed" } }
+      );
+
+      expect(mockFetch).toHaveBeenCalledWith(
+        expect.any(String),
+        expect.objectContaining({
+          headers: expect.objectContaining({
+            "x-client-ip": "203.0.113.7",
+            "x-cart-id": "guest_cart_abc",
+          }),
+        })
+      );
+    });
+
     it("should throw AuthError for invalid credentials", async () => {
       mockFetch.mockResolvedValueOnce(
         createMockResponse({

@@ -124,8 +124,9 @@ export function createCustomerResource(fetcher: Fetcher) {
         {
           method: "POST",
           body: { email, password },
-          headers,
           ...fetchOptions,
+          // SDK headers win; caller headers (fetchOptions) are merged in, not replaced
+          headers: { ...fetchOptions?.headers, ...headers },
         }
       );
     },
@@ -159,8 +160,9 @@ export function createCustomerResource(fetcher: Fetcher) {
         "/api/storefront/v1/customer/logout",
         {
           method: "POST",
-          headers: buildSessionHeaders(sessionId),
           ...fetchOptions,
+          // SDK headers win; caller headers (fetchOptions) are merged in, not replaced
+          headers: { ...fetchOptions?.headers, ...buildSessionHeaders(sessionId) },
         }
       );
     },
@@ -190,8 +192,9 @@ export function createCustomerResource(fetcher: Fetcher) {
         "/api/storefront/v1/customer/get-user",
         {
           method: "GET",
-          headers: buildSessionHeaders(sessionId),
           ...fetchOptions,
+          // SDK headers win; caller headers (fetchOptions) are merged in, not replaced
+          headers: { ...fetchOptions?.headers, ...buildSessionHeaders(sessionId) },
         }
       );
     },
@@ -376,9 +379,10 @@ export function createCustomerResource(fetcher: Fetcher) {
         "/api/storefront/v1/customer/edit-user",
         {
           method: "PATCH",
-          headers: buildSessionHeaders(sessionId),
           body: data,
           ...fetchOptions,
+          // SDK headers win; caller headers (fetchOptions) are merged in, not replaced
+          headers: { ...fetchOptions?.headers, ...buildSessionHeaders(sessionId) },
         }
       );
     },
@@ -415,8 +419,9 @@ export function createCustomerResource(fetcher: Fetcher) {
         "/api/storefront/v1/customer/delete-user",
         {
           method: "DELETE",
-          headers: buildSessionHeaders(sessionId),
           ...fetchOptions,
+          // SDK headers win; caller headers (fetchOptions) are merged in, not replaced
+          headers: { ...fetchOptions?.headers, ...buildSessionHeaders(sessionId) },
         }
       );
     },
@@ -451,8 +456,9 @@ export function createCustomerResource(fetcher: Fetcher) {
         `/api/storefront/v1/customer/get-orders/${customerId}`,
         {
           method: "GET",
-          headers: buildSessionHeaders(sessionId),
           ...fetchOptions,
+          // SDK headers win; caller headers (fetchOptions) are merged in, not replaced
+          headers: { ...fetchOptions?.headers, ...buildSessionHeaders(sessionId) },
         }
       );
     },
@@ -498,8 +504,9 @@ export function createCustomerResource(fetcher: Fetcher) {
           "/api/storefront/v1/customer/wishlist",
           {
             method: "GET",
-            headers: buildSessionHeaders(sessionId),
             ...fetchOptions,
+            // SDK headers win; caller headers (fetchOptions) are merged in, not replaced
+            headers: { ...fetchOptions?.headers, ...buildSessionHeaders(sessionId) },
           }
         );
       },
@@ -534,9 +541,10 @@ export function createCustomerResource(fetcher: Fetcher) {
           "/api/storefront/v1/customer/wishlist",
           {
             method: "POST",
-            headers: buildSessionHeaders(sessionId),
             body: { productId, variationId },
             ...fetchOptions,
+            // SDK headers win; caller headers (fetchOptions) are merged in, not replaced
+            headers: { ...fetchOptions?.headers, ...buildSessionHeaders(sessionId) },
           }
         );
       },
@@ -571,9 +579,10 @@ export function createCustomerResource(fetcher: Fetcher) {
           "/api/storefront/v1/customer/wishlist",
           {
             method: "DELETE",
-            headers: buildSessionHeaders(sessionId),
             body: { productId, variationId },
             ...fetchOptions,
+            // SDK headers win; caller headers (fetchOptions) are merged in, not replaced
+            headers: { ...fetchOptions?.headers, ...buildSessionHeaders(sessionId) },
           }
         );
       },
