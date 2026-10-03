@@ -163,6 +163,12 @@ export interface UpdateProfileData {
   email?: string;
   /** Updated newsletter subscription preference */
   isSubscribedToNewsletter?: boolean;
+  /**
+   * The customer's current password. Required when `email` changes;
+   * the request fails with a ValidationError if it is missing or wrong.
+   * Changing the email also signs out the customer's other sessions.
+   */
+  currentPassword?: string;
 }
 
 /**

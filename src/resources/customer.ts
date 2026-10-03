@@ -347,18 +347,21 @@ export function createCustomerResource(fetcher: Fetcher) {
      * Update the authenticated customer's profile.
      *
      * @param sessionId - The customer's session ID
-     * @param data - Profile data to update (firstName, lastName, email)
+     * @param data - Profile data to update (firstName, lastName, email).
+     *   Changing the email requires `currentPassword`.
      * @param fetchOptions - Fetch options
      * @returns Updated customer data
      * @throws AuthError if session is invalid
-     * @throws ValidationError if email is already taken by another customer
+     * @throws ValidationError if email is already taken by another customer,
+     *   or the email changes without a correct `currentPassword`
      *
      * @example
      * ```typescript
      * const { customer } = await client.customer.updateProfile(sessionId, {
      *   firstName: 'Jane',
      *   lastName: 'Smith',
-     *   email: 'jane.smith@example.com'
+     *   email: 'jane.smith@example.com',
+     *   currentPassword: 'their-current-password', // only needed when email changes
      * });
      *
      * console.log('Profile updated:', customer.email);
